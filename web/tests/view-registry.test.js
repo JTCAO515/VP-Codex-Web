@@ -18,3 +18,11 @@ test("view switching loads the data-heavy panels on demand", () => {
   assert.match(app, /if \(view === "tools"\) loadTools\(\)/);
   assert.match(app, /if \(view === "trips"\) loadTrips\(\)/);
 });
+
+test("data-heavy panels render loading, empty, and error feedback", () => {
+  assert.match(app, /function showToast/);
+  assert.match(app, /function setStatus/);
+  assert.match(app, /function emptyState/);
+  assert.match(app, /function loadingCards/);
+  assert.match(app, /catch \(error\)/);
+});

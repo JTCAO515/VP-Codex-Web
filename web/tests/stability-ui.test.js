@@ -26,3 +26,14 @@ test("mobile portrait interaction shell has thumb-friendly controls", () => {
   assert.match(css, /\.city-strip\s*{[^}]*scroll-snap-type: x mandatory/s);
   assert.match(html, /data-prompt="Plan a first-time 7 day China route/);
 });
+
+test("v6.0.3 exposes mobile status surfaces", () => {
+  assert.match(html, /id="cityStatus"/);
+  assert.match(html, /id="toolStatus"/);
+  assert.match(html, /id="tripStatus"/);
+  assert.match(html, /id="toast"/);
+  assert.match(css, /\.empty-state/);
+  assert.match(css, /\.skeleton-card/);
+  assert.match(css, /\.toast\.is-visible/);
+  assert.match(css, /\.sheet-handle/);
+});

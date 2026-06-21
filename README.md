@@ -6,7 +6,7 @@ Active repository: `https://github.com/JTCAO515/VP-Codex-Web`
 
 ## Current Version
 
-`v6.0.0` is a clean rewrite. The new implementation keeps the product direction, curated JSON data, image assets, and Vercel deployment shape, but replaces the application code with a new backend, frontend, and test suite.
+`v6.0.3` continues the clean rewrite line with mobile UX hardening: clearer loading, empty, error, and success states plus phone-first account and saved-trip flows.
 
 ## Product Surface
 

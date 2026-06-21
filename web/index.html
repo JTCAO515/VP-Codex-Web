@@ -6,7 +6,7 @@
     <title>VisePanda | China Travel Workspace</title>
     <meta name="description" content="Plan China travel with city intelligence, visa guidance, readiness tools, and an AI trip assistant.">
     <link rel="manifest" href="/web/manifest.json">
-    <link rel="stylesheet" href="/web/app.css?v=20260621-mobile3">
+    <link rel="stylesheet" href="/web/app.css?v=20260621-v603">
   </head>
   <body>
     <header class="topbar">
@@ -125,6 +125,7 @@
           </div>
           <input class="search" id="citySearch" type="search" placeholder="Search city, region, highlight" aria-label="Search cities">
         </div>
+        <p class="view-status" id="cityStatus" role="status" aria-live="polite"></p>
         <div class="city-grid" id="cityGrid"></div>
       </section>
 
@@ -133,6 +134,7 @@
           <p class="eyebrow">Before you go</p>
           <h2>Travel Tools</h2>
         </div>
+        <p class="view-status" id="toolStatus" role="status" aria-live="polite"></p>
         <div class="tool-grid" id="toolGrid"></div>
         <div class="tool-detail" id="toolDetail"></div>
       </section>
@@ -145,6 +147,7 @@
           </div>
           <button class="secondary" id="refreshTrips" type="button">Refresh</button>
         </div>
+        <p class="view-status" id="tripStatus" role="status" aria-live="polite"></p>
         <form class="trip-form" id="tripForm">
           <input name="title" placeholder="Trip title" aria-label="Trip title" required>
           <input name="destination" placeholder="Destination" aria-label="Destination">
@@ -157,6 +160,7 @@
     </main>
 
     <dialog class="auth-dialog" id="authDialog">
+      <div class="sheet-handle" aria-hidden="true"></div>
       <form method="dialog" class="dialog-close">
         <button class="icon-button" title="Close" aria-label="Close">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
@@ -185,10 +189,12 @@
       </div>
     </dialog>
 
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
     <template id="messageTemplate">
       <article class="message"><span></span><p></p></article>
     </template>
 
-    <script src="/web/app.js?v=20260621-mobile3" defer></script>
+    <script src="/web/app.js?v=20260621-v603" defer></script>
   </body>
 </html>

@@ -36,6 +36,11 @@ button {
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
+button:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
 svg {
   width: 20px;
   height: 20px;
@@ -339,6 +344,18 @@ textarea:focus-visible {
   gap: 16px;
 }
 
+.view-status {
+  min-height: 24px;
+  margin: -10px 0 18px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.view-status[data-tone="error"] {
+  color: #b42318;
+}
+
 .search {
   max-width: 360px;
 }
@@ -364,12 +381,58 @@ textarea:focus-visible {
 .readiness,
 .tool-detail,
 .trip-card,
-.chat-shell,
-.auth-dialog {
+.chat-shell {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
   box-shadow: 0 8px 24px rgba(23, 33, 38, 0.06);
+}
+
+.empty-state,
+.skeleton-card {
+  border: 1px dashed #bfd4db;
+  border-radius: 8px;
+  background: #fff;
+  padding: 18px;
+}
+
+.empty-state {
+  display: grid;
+  gap: 10px;
+  min-height: 168px;
+  align-content: center;
+}
+
+.empty-state h3,
+.empty-state p {
+  margin-bottom: 0;
+}
+
+.empty-state .secondary {
+  width: max-content;
+}
+
+.skeleton-card {
+  display: grid;
+  gap: 12px;
+}
+
+.skeleton-card span {
+  display: block;
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eef5f6, #dfecef, #eef5f6);
+  background-size: 220% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-card span:first-child {
+  height: 120px;
+  border-radius: 8px;
+}
+
+.skeleton-card span:last-child {
+  width: 62%;
 }
 
 .city-card {
@@ -515,6 +578,15 @@ textarea:focus-visible {
   margin-top: 18px;
 }
 
+.tool-detail ul {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: #43545d;
+  line-height: 1.55;
+}
+
 .trip-form {
   grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 150px 150px auto;
   margin-bottom: 18px;
@@ -529,6 +601,10 @@ textarea:focus-visible {
 }
 
 .auth-dialog {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
   width: min(520px, calc(100vw - 32px));
   padding: 0;
 }
@@ -541,6 +617,10 @@ textarea:focus-visible {
   display: flex;
   justify-content: flex-end;
   padding: 12px;
+}
+
+.sheet-handle {
+  display: none;
 }
 
 .auth-layout {
@@ -558,6 +638,37 @@ textarea:focus-visible {
 .link-button {
   min-height: 40px;
   font-weight: 800;
+}
+
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  max-width: min(360px, calc(100vw - 36px));
+  min-height: 46px;
+  display: grid;
+  align-items: center;
+  border: 1px solid #bdd7de;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast[data-tone="error"] {
+  border-color: #f3b7b0;
+  color: #8f1f17;
 }
 
 .is-hidden {
@@ -868,12 +979,38 @@ textarea:focus-visible {
   }
 
   .auth-dialog {
-    width: calc(100vw - 24px);
+    position: fixed;
+    inset: auto 8px calc(10px + env(safe-area-inset-bottom)) 8px;
+    width: auto;
+    max-width: none;
     max-height: calc(100dvh - 34px);
+    margin: 0;
+    border-radius: 8px;
+    overflow: auto;
+  }
+
+  .sheet-handle {
+    display: block;
+    width: 44px;
+    height: 5px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: #c9d9de;
+  }
+
+  .dialog-close {
+    padding: 6px 10px 0;
   }
 
   .auth-layout {
     padding: 0 16px 18px;
+  }
+
+  .toast {
+    right: 14px;
+    bottom: calc(92px + env(safe-area-inset-bottom));
+    left: 14px;
+    max-width: none;
   }
 }
 
@@ -882,6 +1019,18 @@ textarea:focus-visible {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
   }
 }

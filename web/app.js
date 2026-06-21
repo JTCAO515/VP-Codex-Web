@@ -9,6 +9,63 @@ const state = {
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
+function showToast(message, tone = "info") {
+  const toast = $("#toast");
+  toast.textContent = message;
+  toast.dataset.tone = tone;
+  toast.classList.add("is-visible");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("is-visible"), 3200);
+}
+
+function setStatus(selector, message, tone = "neutral") {
+  const node = $(selector);
+  if (!node) return;
+  node.textContent = message || "";
+  node.dataset.tone = tone;
+}
+
+function emptyState(title, text, actionLabel, action) {
+  const article = document.createElement("article");
+  article.className = "empty-state";
+  article.appendChild(createText("h3", "", title));
+  article.appendChild(createText("p", "meta", text));
+  if (actionLabel && action) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary";
+    button.textContent = actionLabel;
+    button.addEventListener("click", action);
+    article.appendChild(button);
+  }
+  return article;
+}
+
+function loadingCards(count = 3) {
+  return Array.from({ length: count }, () => {
+    const card = document.createElement("article");
+    card.className = "skeleton-card";
+    card.appendChild(document.createElement("span"));
+    card.appendChild(document.createElement("span"));
+    card.appendChild(document.createElement("span"));
+    return card;
+  });
+}
+
+async function withButtonBusy(button, label, task) {
+  const oldHtml = button.innerHTML;
+  button.disabled = true;
+  button.setAttribute("aria-busy", "true");
+  if (label) button.textContent = label;
+  try {
+    return await task();
+  } finally {
+    button.disabled = false;
+    button.removeAttribute("aria-busy");
+    button.innerHTML = oldHtml;
+  }
+}
+
 async function api(path, options = {}) {
   const headers = {
     "Content-Type": "application/json",
@@ -65,17 +122,31 @@ function cityCard(city) {
 }
 
 async function loadCities() {
-  if (!state.cities.length) {
-    const data = await api("/api/cities");
-    state.cities = data.cities || [];
+  const grid = $("#cityGrid");
+  try {
+    if (!state.cities.length) {
+      setStatus("#cityStatus", "Loading city intelligence...");
+      grid.replaceChildren(...loadingCards(6));
+      const data = await api("/api/cities");
+      state.cities = data.cities || [];
+    }
+  } catch (error) {
+    setStatus("#cityStatus", error.message, "error");
+    grid.replaceChildren(emptyState("Cities did not load", "Check the connection and try again.", "Retry", loadCities));
+    return;
   }
   const query = ($("#citySearch")?.value || "").toLowerCase();
   const filtered = state.cities.filter((city) => {
     const haystack = [city.name, city.province, city.vibe, ...(city.highlights || [])].join(" ").toLowerCase();
     return haystack.includes(query);
   });
-  const grid = $("#cityGrid");
-  grid.replaceChildren(...filtered.map(cityCard));
+  setStatus("#cityStatus", `${filtered.length} destination${filtered.length === 1 ? "" : "s"} ready`);
+  grid.replaceChildren(...(filtered.length ? filtered.map(cityCard) : [
+    emptyState("No city match", "Try a city, province, season, or highlight such as hotpot or Great Wall.", "Clear search", () => {
+      $("#citySearch").value = "";
+      loadCities();
+    }),
+  ]));
   const featured = $("#featuredCities");
   if (featured && !featured.children.length) {
     featured.replaceChildren(...state.cities.slice(0, 4).map(cityCard));
@@ -108,10 +179,20 @@ function renderToolDetail(tool) {
 }
 
 async function loadTools() {
-  if (!state.tools.length) {
-    const data = await api("/api/tools");
-    state.tools = data.tools || [];
+  try {
+    if (!state.tools.length) {
+      setStatus("#toolStatus", "Loading travel tools...");
+      $("#toolGrid").replaceChildren(...loadingCards(4));
+      const data = await api("/api/tools");
+      state.tools = data.tools || [];
+    }
+  } catch (error) {
+    setStatus("#toolStatus", error.message, "error");
+    $("#toolGrid").replaceChildren(emptyState("Tools did not load", "The toolkit is temporarily unavailable.", "Retry", loadTools));
+    $("#toolDetail").replaceChildren();
+    return;
   }
+  setStatus("#toolStatus", `${state.tools.length} tools available`);
   const cards = state.tools.map((tool) => {
     const card = document.createElement("article");
     card.className = "tool-card";
@@ -122,8 +203,15 @@ async function loadTools() {
     button.className = "secondary";
     button.textContent = "Open";
     button.addEventListener("click", async () => {
-      const data = await api(`/api/tools/${tool.id}`);
-      renderToolDetail(data.tool);
+      await withButtonBusy(button, "Opening", async () => {
+        try {
+          const data = await api(`/api/tools/${tool.id}`);
+          renderToolDetail(data.tool);
+          showToast(`${tool.name} opened`);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      });
     });
     card.appendChild(button);
     return card;
@@ -148,42 +236,60 @@ function addMessage(author, text, kind = "") {
 async function sendChat(message) {
   addMessage("You", message, "user");
   const target = addMessage("VisePanda", "");
-  const response = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message }),
-  });
-  if (!response.ok || !response.body) {
-    target.textContent = "I could not reach the guide service. Please try again.";
-    return;
-  }
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop() || "";
-    lines.forEach((line) => {
-      if (!line.startsWith("data:")) return;
-      const payload = JSON.parse(line.slice(5).trim());
-      if (payload.token) target.textContent += payload.token;
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
     });
-    $("#chatLog").scrollTop = $("#chatLog").scrollHeight;
+    if (!response.ok || !response.body) {
+      throw new Error("I could not reach the guide service. Please try again.");
+    }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+      lines.forEach((line) => {
+        if (!line.startsWith("data:")) return;
+        const payload = JSON.parse(line.slice(5).trim());
+        if (payload.token) target.textContent += payload.token;
+      });
+      $("#chatLog").scrollTop = $("#chatLog").scrollHeight;
+    }
+  } catch (error) {
+    target.textContent = "I could not reach the guide service. Please try again.";
+    showToast(error.message, "error");
   }
 }
 
 async function loadTrips() {
   const list = $("#tripList");
-  if (!state.token) {
-    const localTrips = JSON.parse(localStorage.getItem("vp_guest_trips") || "[]");
-    list.replaceChildren(...localTrips.map(tripCard));
-    return;
+  try {
+    if (!state.token) {
+      const localTrips = JSON.parse(localStorage.getItem("vp_guest_trips") || "[]");
+      setStatus("#tripStatus", localTrips.length ? "Guest trips are saved on this device." : "Guest mode: save a quick trip on this device.");
+      list.replaceChildren(...(localTrips.length ? localTrips.map(tripCard) : [
+        emptyState("No trips yet", "Save a draft here, or sign in later to sync across devices.", "Use planner", () => setView("dashboard")),
+      ]));
+      return;
+    }
+    setStatus("#tripStatus", "Loading saved trips...");
+    list.replaceChildren(...loadingCards(2));
+    const data = await api("/api/trips");
+    const trips = data.trips || [];
+    setStatus("#tripStatus", trips.length ? "Synced trips loaded." : "Signed in, but no saved trips yet.");
+    list.replaceChildren(...(trips.length ? trips.map(tripCard) : [
+      emptyState("No saved trips", "Create your first China trip and it will sync to this account.", "Ask AI", () => setView("chat")),
+    ]));
+  } catch (error) {
+    setStatus("#tripStatus", error.message, "error");
+    list.replaceChildren(emptyState("Trips did not load", "Try refreshing this view.", "Retry", loadTrips));
   }
-  const data = await api("/api/trips");
-  list.replaceChildren(...(data.trips || []).map(tripCard));
 }
 
 function tripCard(trip) {
@@ -207,6 +313,7 @@ async function saveTrip(form) {
   }
   form.reset();
   await loadTrips();
+  showToast("Trip saved");
 }
 
 function updateAuthUi() {
@@ -244,22 +351,25 @@ function bindEvents() {
   $("#chatForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const input = $("#chatInput");
+    const button = event.currentTarget.querySelector("button");
     const message = input.value.trim();
     if (!message) return;
     input.value = "";
-    await sendChat(message);
+    await withButtonBusy(button, "Sending", () => sendChat(message));
   });
   $("#quickPlanner").addEventListener("submit", async (event) => {
     event.preventDefault();
     const values = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const button = event.currentTarget.querySelector("button");
     setView("chat");
-    await sendChat(`Plan a ${values.length} China trip for ${values.destination || "a first-time visitor"}.`);
+    await withButtonBusy(button, "Asking", () => sendChat(`Plan a ${values.length} China trip for ${values.destination || "a first-time visitor"}.`));
   });
   $("#tripForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    await saveTrip(event.currentTarget);
+    const button = event.currentTarget.querySelector("button");
+    await withButtonBusy(button, "Saving", () => saveTrip(event.currentTarget));
   });
-  $("#refreshTrips").addEventListener("click", loadTrips);
+  $("#refreshTrips").addEventListener("click", (event) => withButtonBusy(event.currentTarget, "Refreshing", loadTrips));
   $("#authButton").addEventListener("click", () => {
     updateAuthUi();
     $("#authDialog").showModal();
@@ -272,29 +382,45 @@ function bindEvents() {
     event.preventDefault();
     const body = Object.fromEntries(new FormData(event.currentTarget).entries());
     const endpoint = state.authMode === "login" ? "/api/auth/login" : "/api/auth/register";
-    const data = await api(endpoint, { method: "POST", body: JSON.stringify(body) });
-    if (data.token) {
-      state.token = data.token;
-      sessionStorage.setItem("vp_token", state.token);
-      state.user = data.user;
-    } else {
-      state.authMode = "login";
-      const login = await api("/api/auth/login", { method: "POST", body: JSON.stringify(body) });
-      state.token = login.token;
-      sessionStorage.setItem("vp_token", state.token);
-      state.user = login.user;
-    }
-    event.currentTarget.reset();
-    updateAuthUi();
+    const button = event.currentTarget.querySelector("button[type='submit']");
+    await withButtonBusy(button, "Working", async () => {
+      try {
+        const data = await api(endpoint, { method: "POST", body: JSON.stringify(body) });
+        if (data.token) {
+          state.token = data.token;
+          sessionStorage.setItem("vp_token", state.token);
+          state.user = data.user;
+        } else {
+          state.authMode = "login";
+          const login = await api("/api/auth/login", { method: "POST", body: JSON.stringify(body) });
+          state.token = login.token;
+          sessionStorage.setItem("vp_token", state.token);
+          state.user = login.user;
+        }
+        event.currentTarget.reset();
+        updateAuthUi();
+        showToast("Account ready");
+      } catch (error) {
+        showToast(error.message, "error");
+      }
+    });
   });
   $("#profileForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const body = Object.fromEntries(new FormData(event.currentTarget).entries());
-    const data = await api("/api/auth/update-profile", { method: "POST", body: JSON.stringify(body) });
-    state.user = data.user;
-    event.currentTarget.elements.currentPassword.value = "";
-    event.currentTarget.elements.newPassword.value = "";
-    updateAuthUi();
+    const button = event.currentTarget.querySelector("button[type='submit']");
+    await withButtonBusy(button, "Updating", async () => {
+      try {
+        const data = await api("/api/auth/update-profile", { method: "POST", body: JSON.stringify(body) });
+        state.user = data.user;
+        event.currentTarget.elements.currentPassword.value = "";
+        event.currentTarget.elements.newPassword.value = "";
+        updateAuthUi();
+        showToast("Profile updated");
+      } catch (error) {
+        showToast(error.message, "error");
+      }
+    });
   });
   $("#logoutButton").addEventListener("click", async () => {
     await api("/api/auth/logout", { method: "POST", body: "{}" }).catch(() => {});
@@ -302,6 +428,7 @@ function bindEvents() {
     state.user = null;
     sessionStorage.removeItem("vp_token");
     updateAuthUi();
+    showToast("Signed out");
   });
 }
 
