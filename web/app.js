@@ -25,6 +25,7 @@ async function api(path, options = {}) {
 }
 
 function setView(view) {
+  document.body.dataset.view = view;
   $$(".nav__item").forEach((button) => button.classList.toggle("is-active", button.dataset.view === view));
   $$("[data-view-panel]").forEach((panel) => panel.classList.toggle("is-hidden", panel.dataset.viewPanel !== view));
   if (view === "cities") loadCities();
@@ -235,6 +236,10 @@ async function restoreSession() {
 
 function bindEvents() {
   $$(".nav__item").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+  $$("[data-prompt]").forEach((button) => button.addEventListener("click", async () => {
+    setView("chat");
+    await sendChat(button.dataset.prompt);
+  }));
   $("#citySearch").addEventListener("input", loadCities);
   $("#chatForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -302,6 +307,7 @@ function bindEvents() {
 
 async function boot() {
   bindEvents();
+  document.body.dataset.view = "dashboard";
   addMessage("VisePanda", "Tell me where you want to go, how many days you have, and your travel style. I will shape a practical China route.");
   await Promise.all([loadCities(), restoreSession()]);
 }

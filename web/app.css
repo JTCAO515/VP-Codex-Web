@@ -21,6 +21,7 @@ body {
   margin: 0;
   background: #f7faf9;
   color: var(--ink);
+  min-height: 100vh;
 }
 
 button,
@@ -32,6 +33,7 @@ textarea {
 
 button {
   cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 svg {
@@ -47,10 +49,11 @@ svg {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto;
   align-items: center;
+  justify-content: space-between;
   gap: 24px;
   min-height: 72px;
   padding: 12px clamp(18px, 4vw, 48px);
@@ -76,9 +79,17 @@ svg {
 }
 
 .nav {
+  position: sticky;
+  top: 72px;
+  z-index: 19;
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
+  min-height: 58px;
+  padding: 8px 18px;
+  background: rgba(247, 250, 249, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
 }
 
 .nav__item,
@@ -89,10 +100,19 @@ svg {
 }
 
 .nav__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-width: 78px;
   min-height: 42px;
   border-radius: 8px;
   font-weight: 700;
+}
+
+.nav__item svg {
+  width: 18px;
+  height: 18px;
 }
 
 .nav__item.is-active {
@@ -181,6 +201,30 @@ h3 {
   line-height: 1.7;
 }
 
+.prompt-rail,
+.chat-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.prompt-rail button,
+.chat-prompts button {
+  min-height: 38px;
+  border: 1px solid #cfe0e5;
+  border-radius: 999px;
+  padding: 0 14px;
+  background: #f0f8f8;
+  color: #195f74;
+  font-weight: 800;
+}
+
+.prompt-rail button:hover,
+.chat-prompts button:hover {
+  border-color: var(--sky);
+  background: #e4f3f6;
+}
+
 .planner,
 .trip-form {
   display: grid;
@@ -227,6 +271,15 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(31, 154, 199, 0.16);
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(31, 154, 199, 0.34);
+  outline-offset: 3px;
+}
+
 .primary,
 .secondary {
   display: inline-flex;
@@ -247,12 +300,22 @@ textarea:focus {
 
 .primary:hover {
   background: var(--orange-dark);
+  border-color: var(--orange-dark);
 }
 
 .secondary {
   border: 1px solid var(--line);
   background: var(--panel);
   color: var(--ink);
+}
+
+.secondary:hover,
+.icon-button:hover,
+.tool-card:hover,
+.city-card:hover,
+.trip-card:hover {
+  border-color: #b9d5dd;
+  box-shadow: 0 12px 32px rgba(23, 33, 38, 0.1);
 }
 
 .section {
@@ -376,8 +439,15 @@ textarea:focus {
 
 .chat-shell {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   min-height: 560px;
   overflow: hidden;
+}
+
+.chat-prompts {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
 }
 
 .chat-log {
@@ -496,11 +566,10 @@ textarea:focus {
 
 @media (max-width: 920px) {
   .topbar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto auto;
   }
 
   .nav {
-    grid-column: 1 / -1;
     justify-content: flex-start;
     overflow-x: auto;
   }
@@ -527,23 +596,292 @@ textarea:focus {
 }
 
 @media (max-width: 560px) {
+  body {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  main {
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    min-height: 58px;
+    padding: 9px 14px;
+  }
+
   .brand span {
-    display: none;
+    display: inline;
+    font-size: 0.98rem;
+  }
+
+  .brand img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav {
+    position: fixed;
+    top: auto;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 12px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    min-height: 66px;
+    padding: 6px;
+    overflow: visible;
+    border: 1px solid rgba(185, 213, 221, 0.92);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 44px rgba(23, 33, 38, 0.2);
+    backdrop-filter: blur(18px);
   }
 
   .nav__item {
-    min-width: 72px;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    min-height: 54px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+  }
+
+  .nav__item svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .icon-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .hero__media {
+    min-height: 0;
+    height: 122px;
+  }
+
+  .hero__content {
+    gap: 12px;
+    padding: 16px 16px 18px;
   }
 
   h1 {
-    font-size: 3.2rem;
+    font-size: 2.32rem;
   }
 
   h2 {
     font-size: 1.55rem;
   }
 
+  .lead {
+    font-size: 1rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .prompt-rail,
+  .chat-prompts {
+    flex-wrap: nowrap;
+    margin-right: -16px;
+    margin-left: -16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .prompt-rail::-webkit-scrollbar,
+  .chat-prompts::-webkit-scrollbar {
+    display: none;
+  }
+
+  .prompt-rail button,
+  .chat-prompts button {
+    flex: 0 0 auto;
+    min-height: 38px;
+    white-space: nowrap;
+  }
+
+  .planner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 10px 26px rgba(23, 33, 38, 0.08);
+  }
+
+  .planner label:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .planner .primary {
+    min-width: 112px;
+  }
+
+  input,
+  select {
+    height: 44px;
+  }
+
+  .section {
+    padding: 28px 16px;
+  }
+
+  .section__head.row {
+    display: grid;
+    align-items: start;
+  }
+
+  .search {
+    max-width: none;
+  }
+
   .city-strip {
+    display: flex;
+    margin-right: -16px;
+    overflow-x: auto;
+    padding: 0 16px 8px 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .city-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .city-strip .city-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  .city-grid,
+  .tool-grid,
+  .trip-list {
     grid-template-columns: 1fr;
+  }
+
+  .city-card img {
+    aspect-ratio: 16 / 10;
+  }
+
+  .city-card__body,
+  .tool-card,
+  .trip-card,
+  .tool-detail,
+  .readiness {
+    padding: 15px;
+  }
+
+  .tags {
+    gap: 6px;
+  }
+
+  .tag {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .chat-shell {
+    min-height: calc(100dvh - 176px);
+  }
+
+  .chat-log {
+    min-height: 320px;
+    max-height: none;
+    padding: 14px;
+  }
+
+  .message {
+    max-width: 94%;
+    padding: 12px 13px;
+  }
+
+  .chat-form {
+    position: sticky;
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    grid-template-columns: 1fr;
+    padding: 12px;
+    box-shadow: 0 -10px 26px rgba(23, 33, 38, 0.08);
+  }
+
+  .chat-form textarea {
+    min-height: 76px;
+  }
+
+  body[data-view="chat"] {
+    overflow: hidden;
+  }
+
+  body[data-view="chat"] main {
+    height: calc(100dvh - 58px - 92px - env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+
+  body[data-view="chat"] .workspace[data-view-panel="chat"] {
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100%;
+    padding: 24px 16px 0;
+    overflow: hidden;
+  }
+
+  body[data-view="chat"] .workspace[data-view-panel="chat"] .section__head {
+    margin-bottom: 16px;
+  }
+
+  body[data-view="chat"] .chat-shell {
+    min-height: 0;
+    height: 100%;
+  }
+
+  body[data-view="chat"] .chat-log {
+    min-height: 0;
+    height: auto;
+  }
+
+  body[data-view="chat"] .chat-form {
+    position: static;
+  }
+
+  .trip-form {
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .auth-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 34px);
+  }
+
+  .auth-layout {
+    padding: 0 16px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

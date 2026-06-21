@@ -6,7 +6,7 @@
     <title>VisePanda | China Travel Workspace</title>
     <meta name="description" content="Plan China travel with city intelligence, visa guidance, readiness tools, and an AI trip assistant.">
     <link rel="manifest" href="/web/manifest.json">
-    <link rel="stylesheet" href="/web/app.css">
+    <link rel="stylesheet" href="/web/app.css?v=20260621-mobile3">
   </head>
   <body>
     <header class="topbar">
@@ -14,17 +14,32 @@
         <img src="/static/img/logo-panda.jpg" alt="">
         <span>VisePanda</span>
       </a>
-      <nav class="nav" aria-label="Primary">
-        <button class="nav__item is-active" data-view="dashboard">Plan</button>
-        <button class="nav__item" data-view="chat">Ask</button>
-        <button class="nav__item" data-view="cities">Cities</button>
-        <button class="nav__item" data-view="tools">Tools</button>
-        <button class="nav__item" data-view="trips">Trips</button>
-      </nav>
       <button class="icon-button" id="authButton" title="Account" aria-label="Account">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.7-4 4.4-6 8-6s6.3 2 8 6"></path></svg>
       </button>
     </header>
+    <nav class="nav" aria-label="Primary">
+      <button class="nav__item is-active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+        <span>Plan</span>
+      </button>
+      <button class="nav__item" data-view="chat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
+        <span>Ask</span>
+      </button>
+      <button class="nav__item" data-view="cities">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 22V8l7-4 9 4v14"></path><path d="M4 14h16"></path><path d="M8 22v-4h8v4"></path></svg>
+        <span>Cities</span>
+      </button>
+      <button class="nav__item" data-view="tools">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 7 9 2 4 7"></path><path d="M9 2v13"></path><path d="M20 17l-5 5-5-5"></path><path d="M15 22V9"></path></svg>
+        <span>Tools</span>
+      </button>
+      <button class="nav__item" data-view="trips">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-3-6 3Z"></path><path d="M9 8h6"></path><path d="M9 12h4"></path></svg>
+        <span>Trips</span>
+      </button>
+    </nav>
 
     <main>
       <section class="hero" data-view-panel="dashboard">
@@ -35,6 +50,11 @@
           <p class="eyebrow">China travel planning for international visitors</p>
           <h1>VisePanda</h1>
           <p class="lead">Build a trip around real city fit, visa readiness, daily logistics, and a practical AI guide that knows what overseas travelers usually miss.</p>
+          <div class="prompt-rail" aria-label="Quick planning prompts">
+            <button type="button" data-prompt="Plan a first-time 7 day China route with simple rail transfers.">First trip</button>
+            <button type="button" data-prompt="Compare Beijing, Shanghai, Chengdu, and Xi'an for a food-focused trip.">Food route</button>
+            <button type="button" data-prompt="Create a visa and payment readiness checklist for a US traveler visiting China.">Visa check</button>
+          </div>
           <form class="planner" id="quickPlanner">
             <label>
               Destination idea
@@ -81,6 +101,11 @@
           <h2>Ask VisePanda</h2>
         </div>
         <div class="chat-shell">
+          <div class="chat-prompts" aria-label="Suggested questions">
+            <button type="button" data-prompt="Give me a calm 3 day Shanghai itinerary with food and metro tips.">Shanghai 3 days</button>
+            <button type="button" data-prompt="What should I prepare before landing in mainland China?">Before landing</button>
+            <button type="button" data-prompt="Help me choose between Chengdu and Xi'an for a first trip.">Choose a city</button>
+          </div>
           <div class="chat-log" id="chatLog" aria-live="polite"></div>
           <form class="chat-form" id="chatForm">
             <textarea id="chatInput" rows="3" placeholder="Ask for a route, budget, visa checklist, or city comparison"></textarea>
@@ -98,7 +123,7 @@
             <p class="eyebrow">Destinations</p>
             <h2>City Explorer</h2>
           </div>
-          <input class="search" id="citySearch" type="search" placeholder="Search city, region, highlight">
+          <input class="search" id="citySearch" type="search" placeholder="Search city, region, highlight" aria-label="Search cities">
         </div>
         <div class="city-grid" id="cityGrid"></div>
       </section>
@@ -121,10 +146,10 @@
           <button class="secondary" id="refreshTrips" type="button">Refresh</button>
         </div>
         <form class="trip-form" id="tripForm">
-          <input name="title" placeholder="Trip title" required>
-          <input name="destination" placeholder="Destination">
-          <input name="startDate" type="date">
-          <input name="endDate" type="date">
+          <input name="title" placeholder="Trip title" aria-label="Trip title" required>
+          <input name="destination" placeholder="Destination" aria-label="Destination">
+          <input name="startDate" type="date" aria-label="Start date">
+          <input name="endDate" type="date" aria-label="End date">
           <button class="primary" type="submit">Save trip</button>
         </form>
         <div class="trip-list" id="tripList"></div>
@@ -144,16 +169,16 @@
           <p class="muted" id="authStatus">Save trips across devices and manage your profile.</p>
         </div>
         <form class="auth-form" id="authForm">
-          <input name="name" placeholder="Name">
-          <input name="email" type="email" placeholder="Email" required>
-          <input name="password" type="password" placeholder="Password" minlength="8" required>
+          <input name="name" placeholder="Name" aria-label="Name">
+          <input name="email" type="email" placeholder="Email" aria-label="Email" required>
+          <input name="password" type="password" placeholder="Password" aria-label="Password" minlength="8" required>
           <button class="primary" type="submit">Continue</button>
           <button class="link-button" type="button" id="toggleAuthMode">Create an account</button>
         </form>
         <form class="profile-form is-hidden" id="profileForm">
-          <input name="name" placeholder="Display name">
-          <input name="currentPassword" type="password" placeholder="Current password">
-          <input name="newPassword" type="password" placeholder="New password">
+          <input name="name" placeholder="Display name" aria-label="Display name">
+          <input name="currentPassword" type="password" placeholder="Current password" aria-label="Current password">
+          <input name="newPassword" type="password" placeholder="New password" aria-label="New password">
           <button class="primary" type="submit">Update profile</button>
           <button class="secondary" type="button" id="logoutButton">Sign out</button>
         </form>
@@ -164,6 +189,6 @@
       <article class="message"><span></span><p></p></article>
     </template>
 
-    <script src="/web/app.js" defer></script>
+    <script src="/web/app.js?v=20260621-mobile3" defer></script>
   </body>
 </html>

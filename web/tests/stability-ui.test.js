@@ -18,3 +18,11 @@ test("first screen is the working planner, not a static landing-only page", () =
   assert.match(html, /data-view-panel="dashboard"/);
   assert.match(html, /id="featuredCities"/);
 });
+
+test("mobile portrait interaction shell has thumb-friendly controls", () => {
+  assert.match(css, /\.nav\s*{[^}]*position: fixed/s);
+  assert.match(css, /bottom: calc\(10px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(css, /\.chat-form\s*{[^}]*position: sticky/s);
+  assert.match(css, /\.city-strip\s*{[^}]*scroll-snap-type: x mandatory/s);
+  assert.match(html, /data-prompt="Plan a first-time 7 day China route/);
+});
