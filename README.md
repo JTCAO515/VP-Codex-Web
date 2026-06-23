@@ -6,7 +6,7 @@ Active repository: `https://github.com/JTCAO515/VP-Codex-Web`
 
 ## Current Version
 
-`v6.1.2` simplifies the first Ask screen into a focused LLM-style China travel prompt: one large input, four short starter prompts, and a quieter Chinese-tech visual stage.
+`v6.1.3` moves the product shell closer to Claude/Gemini: icon-only app tabs live in a left rail on desktop, while the first Ask screen is reduced to one greeting and one prompt box floating over the China-tech background.
 
 ## Documentation
 

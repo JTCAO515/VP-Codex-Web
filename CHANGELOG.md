@@ -1,5 +1,19 @@
 # Changelog
 
+## v6.1.3 - 2026-06-23
+
+### Changed
+
+- Moved desktop primary tabs into a fixed left rail with icon-only controls.
+- Made mobile tabs icon-only while preserving bottom thumb reach.
+- Removed the pre-chat glass shell so the greeting and input float directly on the background.
+- Hid the initial starter prompt chips and agent mark before the first message.
+- Updated the greeting to a shorter conversational line.
+
+### Regression
+
+- Added frontend structure coverage for the icon-only rail and frameless initial Ask surface.
+
 ## v6.1.2 - 2026-06-23
 
 ### Changed
