@@ -6,7 +6,7 @@ Active repository: `https://github.com/JTCAO515/VP-Codex-Web`
 
 ## Current Version
 
-`v6.1.1` keeps the AI-first flow and tightens verified responsive issues: Trips empty states return to Ask, wide desktop chat uses more of the screen, and mobile chat keeps the composer and tab bar from fighting the keyboard.
+`v6.1.2` simplifies the first Ask screen into a focused LLM-style China travel prompt: one large input, four short starter prompts, and a quieter Chinese-tech visual stage.
 
 ## Documentation
 

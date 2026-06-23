@@ -31,7 +31,7 @@ test("mobile portrait interaction shell has thumb-friendly controls", () => {
   assert.match(html, /data-prompt="Plan a first-time 7 day China route/);
 });
 
-test("v6.1.1 exposes mobile status surfaces", () => {
+test("v6.1.2 exposes mobile status surfaces", () => {
   assert.match(html, /id="cityStatus"/);
   assert.match(html, /id="toolStatus"/);
   assert.match(html, /id="tripStatus"/);
@@ -42,17 +42,17 @@ test("v6.1.1 exposes mobile status surfaces", () => {
   assert.match(css, /\.sheet-handle/);
 });
 
-test("v6.1.1 uses shared visual system tokens", () => {
+test("v6.1.2 uses shared visual system tokens", () => {
   assert.match(css, /--surface:/);
   assert.match(css, /--focus-ring:/);
   assert.match(css, /--shadow-raised:/);
   assert.match(css, /\.city-card__facts/);
   assert.match(css, /\.trip-card__facts/);
-  assert.match(html, /20260623-v611-responsive-qa2/);
+  assert.match(html, /20260623-v612-simple-chat/);
   assert.match(css, /prefers-color-scheme: dark/);
 });
 
-test("v6.1.1 exposes professional chat controls progressively", () => {
+test("v6.1.2 exposes professional chat controls progressively", () => {
   assert.match(html, /id="chatMode"/);
   assert.match(html, /id="chatProvider"/);
   assert.match(html, /id="chatDepth"/);
@@ -64,7 +64,7 @@ test("v6.1.1 exposes professional chat controls progressively", () => {
   assert.match(css, /\.preset-group/);
 });
 
-test("v6.1.1 exposes email verification and Google auth controls", () => {
+test("v6.1.2 exposes email verification and Google auth controls", () => {
   assert.match(html, /id="googleLogin"/);
   assert.match(html, /id="verifyForm"/);
   assert.match(html, /id="resendVerification"/);
@@ -73,7 +73,7 @@ test("v6.1.1 exposes email verification and Google auth controls", () => {
   assert.match(appJs(), /\/api\/auth\/resend-verification/);
 });
 
-test("v6.1.1 makes mobile navigation behave like real app tabs", () => {
+test("v6.1.2 makes mobile navigation behave like real app tabs", () => {
   assert.match(html, /role="tablist"/);
   assert.match(html, /id="tab-chat"[^>]*aria-selected="true"/);
   assert.doesNotMatch(html, /id="tab-dashboard"/);
@@ -83,7 +83,7 @@ test("v6.1.1 makes mobile navigation behave like real app tabs", () => {
   assert.match(appJs(), /toggleAttribute\("hidden"/);
 });
 
-test("v6.1.1 strengthens the AI-first mobile planning surface", () => {
+test("v6.1.2 strengthens the AI-first mobile planning surface", () => {
   assert.match(html, /class="home-snapshot"/);
   assert.match(html, /class="quick-chips"/);
   assert.match(css, /\.chat-hero/);
@@ -94,7 +94,7 @@ test("v6.1.1 strengthens the AI-first mobile planning surface", () => {
   assert.match(appJs(), /mobileAskButton/);
 });
 
-test("v6.1.1 fixes verified AI-first responsive regressions", () => {
+test("v6.1.2 fixes verified AI-first responsive regressions", () => {
   assert.doesNotMatch(appJs(), /Use planner", \(\) => setView\("dashboard"\)/);
   assert.match(appJs(), /Ask AI", \(\) => setView\("chat"\)/);
   assert.match(appJs(), /is-chat-composing/);
@@ -104,6 +104,19 @@ test("v6.1.1 fixes verified AI-first responsive regressions", () => {
   assert.match(css, /\.chat-toolbar label:first-child/);
   assert.match(css, /\.chat-toolbar\s*{[^}]*overflow-x: auto/s);
   assert.match(appJs(), /window\.scrollTo\(\{ top: 0, behavior: "auto" \}\)/);
+});
+
+test("v6.1.2 keeps the initial Ask screen simple and LLM-like", () => {
+  assert.match(html, /Where in China next\?/);
+  assert.match(html, /Ask anything about traveling in China\.\.\./);
+  assert.match(html, />Plan 7 days</);
+  assert.match(html, />Visa check</);
+  assert.match(html, />Cities</);
+  assert.match(html, />Budget</);
+  assert.doesNotMatch(html, /Tell me your nationality/);
+  assert.match(css, /\.chat-hero:not\(\.has-started\) \.chat-status\s*{[^}]*display: none/s);
+  assert.match(css, /\.chat-hero:not\(\.has-started\) \.chat-form textarea\s*{[^}]*min-height: 112px/s);
+  assert.match(css, /\.chat-hero:not\(\.has-started\) \.send-label/);
 });
 
 function appJs() {

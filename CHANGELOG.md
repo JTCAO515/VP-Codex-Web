@@ -1,5 +1,18 @@
 # Changelog
 
+## v6.1.2 - 2026-06-23
+
+### Changed
+
+- Simplified the initial Ask screen into a mainstream LLM-style prompt surface.
+- Reduced above-the-fold copy to a single question, one large input, and four short starter prompts.
+- Restyled the pre-chat state with a darker Chinese-tech stage, subtle grid lines, glass panel treatment, and icon-first send action.
+- Kept the professional chat controls available after the first message so the simplified entry does not remove deeper planning functionality.
+
+### Regression
+
+- Added frontend structure coverage for the simplified initial Ask screen, reduced copy, and large prompt input.
+
 ## v6.1.1 - 2026-06-23
 
 ### Fixed

@@ -1,4 +1,4 @@
-const CACHE_NAME = "visepanda-shell-v611-responsive-qa2";
+const CACHE_NAME = "visepanda-shell-v612-simple-chat";
 const APP_SHELL = [
   "/",
   "/web/index.html",

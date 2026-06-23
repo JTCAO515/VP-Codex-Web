@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <link rel="manifest" href="/web/manifest.json">
-    <link rel="stylesheet" href="/web/app.css?v=20260623-v611-responsive-qa2">
+    <link rel="stylesheet" href="/web/app.css?v=20260623-v612-simple-chat">
   </head>
   <body>
     <header class="topbar">
@@ -111,20 +111,17 @@
               <img src="/static/img/logo-panda.jpg" alt="">
               <div>
                 <strong>VisePanda</strong>
-                <span>AI China Travel Agent</span>
+                <span>China travel AI</span>
               </div>
             </div>
             <div class="welcome-copy">
-              <h1>Ask before you plan.</h1>
-              <p>Tell me your nationality, month, total days, budget band, and what matters most. I will turn that into a practical China route, checklist, or city decision.</p>
+              <h1>Where in China next?</h1>
             </div>
             <div class="quick-chips" aria-label="Quick planning prompts">
-              <button type="button" data-mode="itinerary" data-depth="expert" data-prompt="Plan a first-time 7 day China route with simple rail transfers. Ask me only the missing questions first, then give a professional draft.">First trip</button>
-              <button type="button" data-mode="food" data-depth="standard" data-prompt="Compare Beijing, Shanghai, Chengdu, and Xi'an for a food-focused trip. Include dish fit, neighborhood base, pacing, and traveler tradeoffs.">Food route</button>
-              <button type="button" data-mode="entry" data-depth="expert" data-prompt="Create a visa, payment, app, and document readiness checklist for a US traveler visiting China.">Entry ready</button>
+              <button type="button" data-mode="itinerary" data-depth="expert" data-prompt="Plan a first-time 7 day China route with simple rail transfers. Ask me only the missing questions first, then give a professional draft.">Plan 7 days</button>
+              <button type="button" data-mode="entry" data-depth="expert" data-prompt="Create a visa, payment, app, and document readiness checklist for a US traveler visiting China.">Visa check</button>
+              <button type="button" data-mode="city-fit" data-depth="standard" data-prompt="Compare Beijing, Shanghai, Chengdu, Xi'an, Guilin, and Zhangjiajie for a first-time traveler. Rank them by food, culture, logistics, and trip difficulty.">Cities</button>
               <button type="button" data-mode="budget" data-depth="expert" data-prompt="Build a realistic China travel budget model for a 7 day first-time trip, with low, mid, and comfortable bands.">Budget</button>
-              <button type="button" data-mode="transit" data-depth="standard" data-prompt="Compare high-speed rail versus domestic flights for a Beijing, Xi'an, Shanghai route. Include station transfers, booking friction, delays, and comfort.">Rail vs flight</button>
-              <button type="button" data-mode="city-fit" data-depth="standard" data-prompt="Compare Beijing, Shanghai, Chengdu, Xi'an, Guilin, and Zhangjiajie for a first-time traveler. Rank them by food, culture, logistics, and trip difficulty.">Compare cities</button>
             </div>
           </div>
           <div class="chat-toolbar is-hidden" aria-label="Chat settings">
@@ -182,10 +179,10 @@
           <p class="view-status chat-status" id="chatStatus" role="status" aria-live="polite">Ready. Start with a question or a quick prompt.</p>
           <div class="chat-log" id="chatLog" aria-live="polite"></div>
           <form class="chat-form" id="chatForm">
-            <textarea id="chatInput" rows="3" placeholder="Ask for a route, budget, visa checklist, or city comparison"></textarea>
+            <textarea id="chatInput" rows="3" placeholder="Ask anything about traveling in China..."></textarea>
             <button class="primary" type="submit">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"></path><path d="m22 2-7 20-4-9-9-4Z"></path></svg>
-              Send
+              <span class="send-label">Send</span>
             </button>
           </form>
         </div>
@@ -290,6 +287,6 @@
       <article class="message"><span class="message__author"></span><p class="message__body"></p></article>
     </template>
 
-    <script src="/web/app.js?v=20260623-v611-responsive-qa2" defer></script>
+    <script src="/web/app.js?v=20260623-v612-simple-chat" defer></script>
   </body>
 </html>
