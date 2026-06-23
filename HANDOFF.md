@@ -2,7 +2,7 @@
 
 Last updated: 2026-06-23
 Current version: v6.2.1
-Latest commit: pending local commit for travel-butler translation iteration
+Latest commit: pending local commit for v6.2.1 travel-butler IA and service API iteration
 Repository: https://github.com/JTCAO515/VP-Codex-Web
 Production domain: https://go2china.space
 Deployment target: Vercel, routed through `api/index.py`
@@ -26,16 +26,22 @@ Phase 1 pre-trip planning exists as a working foundation. Phase 1.5 is now the m
 Command center for:
 
 - destination and trip-length input;
+- lightweight weather/location strip;
+- hotels that mark foreign guest acceptance, English service, foreign-card support, and metro distance;
+- map and nearby POI cards served through the `/api/maps/*` proxy interface;
+- Meituan/Dianping-style deals guidance with foreigner usability labels;
 - recent Ask question summary;
 - saved trip summary;
 - next-action prompt;
 - featured cities;
+- travel tools;
 - readiness checklist.
 
-### Ask
+### Chatbot
 
 Default first screen. It behaves like a mainstream LLM chat after conversation starts:
 
+- startup DeepSeek health status is shown after the user enters the chat surface;
 - no visible mode/model/depth controls;
 - no preset panel after first message;
 - AI answers end with generated follow-up question buttons;
@@ -63,21 +69,9 @@ Translation data lives in:
 
 This is not yet a full machine translation engine. Voice STT/TTS is prepared as a browser capability path and should be completed in a later iteration.
 
-### Cities
+### Removed Standalone Tabs
 
-Searchable China destination cards from `data/cities.json`.
-
-### Map
-
-Route and geography intelligence from `/api/map`, with a starter fallback in the frontend.
-
-### Tools
-
-Practical helper cards. Future Phase 1.5 work should add Meituan/Dianping group-buying guidance, taxi helper cards, and stronger payment/SIM/VPN support here.
-
-### Trips
-
-Guest local drafts and authenticated saved trips.
+Cities, Map, Tools, and Trips are no longer primary tabs. Their core functions are aggregated into Dashboard so mobile portrait navigation stays simple.
 
 ### Account
 
@@ -100,6 +94,10 @@ api/index.py
         +-- api/auth.py
         +-- api/chat.py
         +-- api/cities.py
+        +-- api/deals.py
+        +-- api/health.py
+        +-- api/hotels.py
+        +-- api/maps.py
         +-- api/tools.py
         +-- api/translations.py
         +-- api/visa.py
@@ -125,7 +123,13 @@ Frontend remains static HTML/CSS/vanilla JS. Backend remains Python WSGI with st
 | `DESIGN.md` | UI system and mobile rules |
 | `CHANGELOG.md` | Release notes |
 | `api/index.py` | Main WSGI router |
+| `api/health.py` | Health payload including DeepSeek reachability |
+| `api/maps.py` | Server-side map proxy contract and local POI stub |
+| `api/hotels.py` | Hotel search/detail/book intent API stub |
+| `api/deals.py` | Deals search/detail API stub |
 | `api/translations.py` | Translation library API |
+| `data/hotels/hotels.json` | Foreigner-friendly hotel seed data |
+| `data/deals/deals.json` | Group-buying/deals seed data |
 | `data/translations/*.json` | Native travel translation dictionaries |
 | `web/index.html` | Main UI |
 | `web/app.css` | Responsive visual system |
@@ -138,6 +142,9 @@ Frontend remains static HTML/CSS/vanilla JS. Backend remains Python WSGI with st
 ### v6.2.1
 
 - Repositioned product as all-in-one China travel butler.
+- Collapsed primary navigation to Chatbot, Dashboard, and Translation.
+- Added DeepSeek health checks and stabilized `deepseek-v4-flash` chat calls with non-thinking mode.
+- Added map, hotel, and deals API stubs plus Dashboard aggregation.
 - Added native Translate tab.
 - Added translation JSON datasets.
 - Added `/api/translations`.
@@ -165,7 +172,7 @@ python -c "from api.index import app; from wsgiref.simple_server import make_ser
 Health:
 
 ```json
-{"ok":true,"service":"VisePanda","version":"6.2.1"}
+{"ok":true,"service":"VisePanda","version":"6.2.1","llm":{"provider":"deepseek","status":"available"}}
 ```
 
 ## 7. Verification
@@ -183,7 +190,7 @@ git diff --check
 Latest known passing state for v6.2.1:
 
 - Python tests: 19/19 passing
-- Frontend tests: 21/21 passing
+- Frontend tests: 24/24 passing
 
 ## 8. Environment Variables
 
@@ -215,6 +222,14 @@ Public:
 - `GET /api/cities`
 - `GET /api/cities/:id`
 - `GET /api/map`
+- `GET /api/maps/geocode`
+- `GET /api/maps/place`
+- `GET /api/maps/translate`
+- `GET /api/hotels/search`
+- `GET /api/hotels/detail`
+- `POST /api/hotels/book`
+- `GET /api/deals/search`
+- `GET /api/deals/detail`
 - `GET /api/translations`
 - `GET /api/tools`
 - `GET /api/tools/:id`
@@ -271,5 +286,5 @@ Admin:
 2. Read this `HANDOFF.md`.
 3. Run the verification commands above.
 4. Open local app.
-5. Check Dashboard, Ask, Translate, Cities, Map, Tools, Trips.
+5. Check Chatbot, Dashboard, and Translation.
 6. Check mobile portrait around 390x844.

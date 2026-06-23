@@ -14,7 +14,8 @@ The active direction:
 - Light sky-blue workspace with warm orange primary actions.
 - Icon-only desktop rail.
 - Bottom mobile app tabs.
-- Clear task surfaces: Dashboard, Ask, Translate, Cities, Map, Tools, Trips.
+- Clear task surfaces: Chatbot, Dashboard, Translation.
+- Dashboard aggregates cities, map POI, tools, trips, hotels, and deals.
 - Real travel imagery and concise operational copy.
 
 ## Tokens
@@ -40,13 +41,9 @@ Important colors:
 
 Primary tabs:
 
-1. Dashboard
-2. Ask
-3. Translate
-4. Cities
-5. Map
-6. Tools
-7. Trips
+1. Chatbot
+2. Dashboard
+3. Translation
 
 Desktop:
 
@@ -57,18 +54,30 @@ Desktop:
 Mobile:
 
 - Fixed bottom tab bar.
-- Seven icon targets are allowed, but each must remain tappable and visually clear.
+- Three icon targets only, optimized for thumb reach.
 - Hide tab labels visually to preserve space.
 - Hide nav while composing in chat.
 
-## Ask Design
+## Chatbot Design
 
-Ask should feel like Claude/Gemini after a conversation starts:
+Chatbot should feel like Claude/Gemini after a conversation starts:
 
 - No visible mode/model/depth controls.
 - No preset panel after the first message.
 - Conversation, input, and follow-up suggestions only.
 - Keep status text minimal and hide it when empty.
+- Show DeepSeek connectivity as a compact status surface; local fallback must remain clear.
+
+## Dashboard Design
+
+Dashboard is the service hub:
+
+- Weather/location strip first.
+- Quick planner immediately below.
+- Hotels, Map, and Deals as high-frequency action cards.
+- My trips, recommended cities, and tools as compact modules.
+- Mobile stacks into one column; desktop can use multi-column card grids.
+- Use light motion only where it helps hierarchy, and respect reduced motion.
 
 ## Translate Design
 

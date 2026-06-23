@@ -9,6 +9,9 @@ class ConfigContractTests(unittest.TestCase):
         self.assertEqual(code, 200)
         self.assertTrue(data["ok"])
         self.assertEqual(data["version"], "6.2.1")
+        self.assertIn("llm", data)
+        self.assertIn(data["llm"]["status"], {"available", "configured", "unconfigured", "error"})
+        self.assertEqual(data["llm"]["provider"], "deepseek")
 
         code, config, _ = request("GET", "/api/config")
         self.assertEqual(code, 200)

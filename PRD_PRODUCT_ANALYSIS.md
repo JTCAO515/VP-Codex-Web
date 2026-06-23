@@ -35,10 +35,10 @@ The product promise:
 
 | Segment | Need | Product Fit |
 | --- | --- | --- |
-| First-time foreign visitors | Understand China logistics before booking | Ask, Dashboard, Cities, visa/readiness tools |
-| Independent travelers already in China | Translate, eat, move, and solve local friction | Translate, Map, Tools, phrase library |
+| First-time foreign visitors | Understand China logistics before booking | Chatbot, Dashboard, visa/readiness tools |
+| Independent travelers already in China | Translate, eat, move, and solve local friction | Translation, Dashboard map/deals/tools, phrase library |
 | Families and older travelers | Reduce anxiety around taxis, hotels, restaurants, and emergencies | Voice/text translation, emergency phrases, readiness checklist |
-| High-intent itinerary builders | Turn ideas into concrete trip plans | Ask, Trips, city context, route intelligence |
+| High-intent itinerary builders | Turn ideas into concrete trip plans | Chatbot, Dashboard trip summaries, city context, route intelligence |
 | English-speaking helpers | Explain China travel clearly for someone else | Dashboard, saved trips, structured answers |
 
 ## Phase Plan
@@ -57,14 +57,16 @@ Current foundation is already usable.
 
 This is the current core expansion.
 
-- Native Translate view.
+- Three core tabs: Chatbot, Dashboard, Translation.
+- Dashboard aggregates hotels, maps, deals, trips, cities, and tools so mobile navigation stays simple.
+- Native Translation view.
 - Voice translation direction and browser speech capability detection.
 - Text translation with local travel dictionary lookup.
 - Phrase cards for taxi, hotel, restaurants, shopping, attractions, and emergencies.
 - Restaurant help: dishes, spice, allergens, English-menu and foreign-card context.
-- Route help: city route and transfer logic through Map.
+- Route help: city route and transfer logic through Dashboard map cards and `/api/maps/*`.
 - Taxi help: Chinese address phrases and driver-facing snippets.
-- Group-buying guidance: Meituan/Dianping steps should be added later inside Tools.
+- Group-buying guidance: Meituan/Dianping-style deal cards live in Dashboard, backed by `/api/deals/*`.
 
 ### Phase 2: After-Trip Community
 

@@ -221,6 +221,8 @@ def _chat_completion(endpoint, api_key, model, prompt):
         "temperature": 0.35,
         "stream": False,
     }
+    if "deepseek.com" in endpoint and model.startswith("deepseek-v4"):
+        payload["thinking"] = {"type": "disabled"}
     request = urllib.request.Request(
         endpoint,
         data=json.dumps(payload).encode("utf-8"),

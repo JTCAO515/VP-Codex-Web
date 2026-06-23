@@ -25,33 +25,17 @@
       </div>
     </header>
     <nav class="nav" aria-label="Primary" role="tablist">
+      <button class="nav__item is-active" id="tab-chatbot" data-view="chat" role="tab" aria-selected="true" aria-controls="panel-chat" title="Chatbot" aria-label="Chatbot">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
+        <span>Chatbot</span>
+      </button>
       <button class="nav__item" id="tab-dashboard" data-view="dashboard" role="tab" aria-selected="false" aria-controls="panel-dashboard" title="Dashboard" aria-label="Dashboard">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h7V4H4Z"></path><path d="M13 20h7V4h-7Z"></path><path d="M4 20h7v-5H4Z"></path></svg>
         <span>Dashboard</span>
       </button>
-      <button class="nav__item is-active" id="tab-chat" data-view="chat" role="tab" aria-selected="true" aria-controls="panel-chat">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
-        <span>Ask</span>
-      </button>
       <button class="nav__item" id="tab-translate" data-view="translate" role="tab" aria-selected="false" aria-controls="panel-translate">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h8"></path><path d="M9 3v2"></path><path d="M4 11c3.4 0 6-2.2 6-6"></path><path d="M12 11c-1.4-.6-2.6-1.6-3.5-3"></path><path d="M13 21l4-10 4 10"></path><path d="M15 17h4"></path></svg>
-        <span>Translate</span>
-      </button>
-      <button class="nav__item" id="tab-cities" data-view="cities" role="tab" aria-selected="false" aria-controls="panel-cities">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 22V8l7-4 9 4v14"></path><path d="M4 14h16"></path><path d="M8 22v-4h8v4"></path></svg>
-        <span>Cities</span>
-      </button>
-      <button class="nav__item" id="tab-map" data-view="map" role="tab" aria-selected="false" aria-controls="panel-map">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18-6 3V6l6-3 6 3 6-3v15l-6 3Z"></path><path d="M9 3v15"></path><path d="M15 6v15"></path></svg>
-        <span>Map</span>
-      </button>
-      <button class="nav__item" id="tab-tools" data-view="tools" role="tab" aria-selected="false" aria-controls="panel-tools">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 7 9 2 4 7"></path><path d="M9 2v13"></path><path d="M20 17l-5 5-5-5"></path><path d="M15 22V9"></path></svg>
-        <span>Tools</span>
-      </button>
-      <button class="nav__item" id="tab-trips" data-view="trips" role="tab" aria-selected="false" aria-controls="panel-trips">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-3-6 3Z"></path><path d="M9 8h6"></path><path d="M9 12h4"></path></svg>
-        <span>Trips</span>
+        <span>Translation</span>
       </button>
     </nav>
 
@@ -59,8 +43,12 @@
       <section class="dashboard section dashboard-drive is-hidden" id="panel-dashboard" data-view-panel="dashboard" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
         <div class="dashboard-main">
           <div class="section__head">
-            <p class="eyebrow">Command center</p>
-            <h2>Dashboard</h2>
+            <p class="eyebrow">Superdrive</p>
+            <h2>China trip command center</h2>
+          </div>
+          <div class="weather-strip">
+            <span>Shanghai · 28°C · Cloudy</span>
+            <span id="dashboardLocation">Location-aware travel cards are ready.</span>
           </div>
           <form class="planner" id="quickPlanner">
             <label>
@@ -80,6 +68,20 @@
               Ask AI
             </button>
           </form>
+          <div class="dashboard-actions" aria-label="Quick actions">
+            <button class="dashboard-action" id="dashboardHotelsButton" type="button">
+              <strong>Hotels</strong>
+              <span>Foreigner-ready stays</span>
+            </button>
+            <button class="dashboard-action" id="dashboardMapButton" type="button">
+              <strong>Map</strong>
+              <span>Nearby POI and routes</span>
+            </button>
+            <button class="dashboard-action" id="dashboardDealsButton" type="button">
+              <strong>Deals</strong>
+              <span>Food and local vouchers</span>
+            </button>
+          </div>
           <div class="dashboard-grid" aria-label="Planning drive">
             <article>
               <strong>Questions</strong>
@@ -95,7 +97,49 @@
             </article>
           </div>
           <div class="dashboard-list" id="recentQuestions" aria-label="Recent questions"></div>
-          <div class="city-strip" id="featuredCities"></div>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>Hotels</h3>
+              <span>Accepts foreign guests · English service · card support</span>
+            </div>
+            <div class="mini-card-grid" id="dashboardHotels"></div>
+          </section>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>Map and nearby POI</h3>
+              <span>Backed by a server-side map proxy interface</span>
+            </div>
+            <div class="dashboard-map" id="dashboardMap"></div>
+          </section>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>Deals</h3>
+              <span>Meituan and Dianping style guidance for visitors</span>
+            </div>
+            <div class="mini-card-grid" id="dashboardDeals"></div>
+          </section>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>Recommended cities</h3>
+              <span>High-signal destinations for first-time and repeat visitors</span>
+            </div>
+            <div class="city-strip" id="featuredCities"></div>
+            <div class="mini-card-grid" id="dashboardCities"></div>
+          </section>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>Travel tools</h3>
+              <span>Visa · payment · connectivity · packing</span>
+            </div>
+            <div class="mini-card-grid" id="dashboardTools"></div>
+          </section>
+          <section class="dashboard-module">
+            <div class="module-head">
+              <h3>My trips</h3>
+              <span>Drafts saved on this device or synced after sign-in</span>
+            </div>
+            <div class="mini-card-grid" id="dashboardTripsList"></div>
+          </section>
         </div>
         <aside class="readiness">
           <h2>Readiness</h2>
@@ -108,7 +152,7 @@
         </aside>
       </section>
 
-      <section class="workspace section chat-hero" id="panel-chat" data-view-panel="chat" role="tabpanel" aria-labelledby="tab-chat">
+      <section class="workspace section chat-hero" id="panel-chat" data-view-panel="chat" role="tabpanel" aria-labelledby="tab-chatbot">
         <div class="chat-shell">
           <div class="chat-welcome" id="chatWelcome">
             <div class="agent-mark">
@@ -128,6 +172,7 @@
               <button type="button" data-mode="budget" data-depth="expert" data-prompt="Build a realistic China travel budget model for a 7 day first-time trip, with low, mid, and comfortable bands.">Budget</button>
             </div>
           </div>
+          <p class="llm-status" id="llmStatus" role="status" aria-live="polite">Checking DeepSeek connection...</p>
           <p class="view-status chat-status" id="chatStatus" role="status" aria-live="polite">Ready. Start with a question or a quick prompt.</p>
           <div class="chat-log" id="chatLog" aria-live="polite"></div>
           <div class="followup-suggestions is-hidden" id="followupSuggestions" aria-label="Follow-up suggestions"></div>
@@ -139,18 +184,6 @@
             </button>
           </form>
         </div>
-      </section>
-
-      <section class="workspace section is-hidden" id="panel-cities" data-view-panel="cities" role="tabpanel" aria-labelledby="tab-cities">
-        <div class="section__head row">
-          <div>
-            <p class="eyebrow">Destinations</p>
-            <h2>City Explorer</h2>
-          </div>
-          <input class="search" id="citySearch" type="search" placeholder="Search city, region, highlight" aria-label="Search cities">
-        </div>
-        <p class="view-status" id="cityStatus" role="status" aria-live="polite"></p>
-        <div class="city-grid" id="cityGrid"></div>
       </section>
 
       <section class="workspace section is-hidden" id="panel-translate" data-view-panel="translate" role="tabpanel" aria-labelledby="tab-translate" hidden>
@@ -195,55 +228,6 @@
         </div>
       </section>
 
-      <section class="workspace section is-hidden" id="panel-map" data-view-panel="map" role="tabpanel" aria-labelledby="tab-map" hidden>
-        <div class="section__head row">
-          <div>
-            <p class="eyebrow">Routes</p>
-            <h2>Map Intelligence</h2>
-          </div>
-          <button class="secondary" id="mapAskButton" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
-            Ask about a route
-          </button>
-        </div>
-        <p class="view-status" id="mapStatus" role="status" aria-live="polite"></p>
-        <div class="map-board" id="mapBoard" aria-label="China route map intelligence"></div>
-      </section>
-
-      <section class="workspace section is-hidden" id="panel-tools" data-view-panel="tools" role="tabpanel" aria-labelledby="tab-tools">
-        <div class="section__head">
-          <p class="eyebrow">Before you go</p>
-          <h2>Travel Tools</h2>
-        </div>
-        <p class="view-status" id="toolStatus" role="status" aria-live="polite"></p>
-        <div class="tool-grid" id="toolGrid"></div>
-        <div class="tool-detail" id="toolDetail"></div>
-      </section>
-
-      <section class="workspace section is-hidden" id="panel-trips" data-view-panel="trips" role="tabpanel" aria-labelledby="tab-trips">
-        <div class="section__head row">
-          <div>
-            <p class="eyebrow">Saved plans</p>
-            <h2>Trips</h2>
-          </div>
-          <button class="secondary" id="refreshTrips" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2"></path><path d="M3 12A9 9 0 0 1 18.5 5.8"></path><path d="M18 2v4h4"></path><path d="M6 22v-4H2"></path></svg>
-            Refresh
-          </button>
-        </div>
-        <p class="view-status" id="tripStatus" role="status" aria-live="polite"></p>
-        <form class="trip-form" id="tripForm">
-          <input name="title" placeholder="Trip title" aria-label="Trip title" required>
-          <input name="destination" placeholder="Destination" aria-label="Destination">
-          <input name="startDate" type="date" aria-label="Start date">
-          <input name="endDate" type="date" aria-label="End date">
-          <button class="primary" type="submit">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path><path d="M17 21v-8H7v8"></path><path d="M7 3v5h8"></path></svg>
-            Save trip
-          </button>
-        </form>
-        <div class="trip-list" id="tripList"></div>
-      </section>
     </main>
 
     <button class="mobile-ask-fab" id="mobileAskButton" type="button">

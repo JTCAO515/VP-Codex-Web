@@ -25,3 +25,9 @@ test("chat protects streaming JSON parsing and sends auth header when available"
 test("chat waits long enough for backend remote-model fallback", () => {
   assert.match(app, /fetchWithTimeout\("\/api\/chat"[\s\S]*45000\)/);
 });
+
+test("chat startup checks llm health and surfaces fallback status", () => {
+  assert.match(app, /function loadLlmHealth/);
+  assert.match(app, /\/api\/health/);
+  assert.match(app, /llm-status/);
+});

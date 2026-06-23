@@ -13,10 +13,24 @@ test("all primary navigation views have matching panels", () => {
   assert.deepEqual([...new Set(navViews)].sort(), [...new Set(panels)].sort());
 });
 
+test("v6.2.1 information architecture uses three core app tabs", () => {
+  const navViews = [...html.matchAll(/class="nav__item[^"]*"[^>]*data-view="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(navViews, ["chat", "dashboard", "translate"]);
+  assert.doesNotMatch(html, /id="tab-cities"/);
+  assert.doesNotMatch(html, /id="tab-map"/);
+  assert.doesNotMatch(html, /id="tab-tools"/);
+  assert.doesNotMatch(html, /id="tab-trips"/);
+  assert.match(html, /id="dashboardMap"/);
+  assert.match(html, /id="dashboardHotels"/);
+  assert.match(html, /id="dashboardDeals"/);
+});
+
 test("view switching loads the data-heavy panels on demand", () => {
-  assert.match(app, /if \(view === "cities"\) loadCities\(\)/);
-  assert.match(app, /if \(view === "tools"\) loadTools\(\)/);
-  assert.match(app, /if \(view === "trips"\) loadTrips\(\)/);
+  assert.match(app, /if \(view === "dashboard"\) loadDashboard\(\)/);
+  assert.match(app, /loadDashboardCities\(\)/);
+  assert.match(app, /loadDashboardMap\(\)/);
+  assert.match(app, /loadDashboardHotels\(\)/);
+  assert.match(app, /loadDashboardDeals\(\)/);
 });
 
 test("data-heavy panels render loading, empty, and error feedback", () => {

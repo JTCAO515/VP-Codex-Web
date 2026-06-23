@@ -10,7 +10,7 @@ Upgrade VisePanda from a China trip planning workspace into an all-in-one China 
 The active product loop is now:
 
 ```text
-Ask before trip -> save/organize in Dashboard and Trips -> use Translate/Map/Tools during trip -> refine Ask with real context
+Chatbot before trip -> organize in Dashboard -> use Translation and Dashboard services during trip -> refine Chatbot with real context
 ```
 
 ## Current Baseline
@@ -19,12 +19,14 @@ Already shipped or actively implemented:
 
 - English-native static frontend.
 - Mobile-first app shell.
-- Dashboard command center.
-- Clean Ask conversation with follow-up suggestions.
+- Three core tabs: Chatbot, Dashboard, Translation.
+- Dashboard command center with hotels, maps, deals, trips, cities, and tools aggregated.
+- Clean Chatbot conversation with DeepSeek health status and follow-up suggestions.
 - Native Translate tab foundation.
 - Translation JSON datasets under `data/translations/`.
 - `/api/translations` endpoint.
-- City, map, tools, trips, auth, and admin foundations.
+- City, map, hotel, deals, tools, trips, auth, and admin foundations.
+- `/api/maps/*`, `/api/hotels/*`, and `/api/deals/*` API contracts.
 - Email verification, optional Resend, optional Google OAuth.
 - Local fallback behavior for AI and translation dictionary use.
 
@@ -45,6 +47,7 @@ Status: foundation complete, still needs depth.
 Status: current core direction.
 
 - Translate text and phrase-library content natively.
+- Keep maps, hotels, deals, cities, trips, and tools inside Dashboard rather than separate mobile tabs.
 - Add browser speech recognition and TTS flow when available.
 - Expand dining translation: dishes, spice, allergens, vegetarian, halal, foreign-card signals.
 - Expand attractions translation: names, aliases, signs, opening notes, ticket reminders.

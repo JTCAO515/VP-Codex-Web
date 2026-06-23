@@ -5,17 +5,24 @@
 ### Changed
 
 - Repositioned VisePanda as an all-in-one China travel butler for foreign visitors.
+- Collapsed the primary IA into three core tabs: Chatbot, Dashboard, and Translation.
+- Redesigned Dashboard as a mobile-first service hub for hotels, maps, deals, trips, recommended cities, and travel tools.
+- Added DeepSeek health reporting to `/api/health` and the Chatbot startup surface.
+- Explicitly disabled DeepSeek thinking mode for the current travel chat route to stabilize `deepseek-v4-flash` completions.
 - Added Phase 1.5 during-trip service direction: translation, dining, routes, taxi help, and local-service guidance.
 - Added a native Translate tab with voice-readiness, text translation, phrase cards, and local translation history.
 - Added `data/translations/` JSON dictionaries for phrases, dining, attractions, and culture.
 - Added `/api/translations`.
+- Added server-side map proxy stubs: `/api/maps/geocode`, `/api/maps/place`, and `/api/maps/translate`.
+- Added hotel booking API stubs: `/api/hotels/search`, `/api/hotels/detail`, and `/api/hotels/book`.
+- Added group-buying/deals API stubs: `/api/deals/search` and `/api/deals/detail`.
 - Updated the app shell cache marker to `20260623-v621-travel-butler-translate`.
 - Marked Phase 2 community features as future scope only.
 
 ### Regression
 
 - Added frontend structure coverage for the Translate tab and translation database files.
-- Added backend contract coverage for `/api/translations`.
+- Added backend contract coverage for `/api/translations`, `/api/health` LLM status, maps, hotels, and deals.
 - Updated version contract coverage to `6.2.1`.
 
 ## v6.1.4 - 2026-06-23

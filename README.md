@@ -6,7 +6,7 @@ Active repository: `https://github.com/JTCAO515/VP-Codex-Web`
 
 ## Current Version
 
-`v6.2.1` upgrades VisePanda from travel planner to all-in-one China travel butler. It adds a native Translate tab, translation JSON datasets, `/api/translations`, and Phase 1.5 during-trip service direction while keeping Phase 2 community out of scope.
+`v6.2.1` upgrades VisePanda from travel planner to all-in-one China travel butler. It consolidates the app into Chatbot, Dashboard, and Translation; adds DeepSeek health checks; introduces map, hotel, and deals API stubs; and keeps Phase 2 community out of scope.
 
 ## Documentation
 
@@ -20,13 +20,9 @@ Active repository: `https://github.com/JTCAO515/VP-Codex-Web`
 
 ## Product Surface
 
-- Dashboard: planning command center with destination input, recent question summaries, saved trip summaries, featured cities, and readiness checklist.
-- Ask: default first-screen AI travel guide with a clean conversation surface, generated follow-up suggestions, and a deterministic local fallback.
+- Chatbot: default first-screen AI travel guide with a clean conversation surface, DeepSeek status, generated follow-up suggestions, and a deterministic local fallback.
+- Dashboard: planning command center with destination input, weather/location strip, recent questions, saved trips, hotels, map POI, deals, recommended cities, travel tools, and readiness checklist.
 - Translate: native text translation, phrase cards, local history, and voice-readiness for taxi, hotel, dining, attractions, shopping, and emergency moments.
-- Cities: searchable China destination cards built from the curated city dataset.
-- Map: route and geography intelligence panel backed by `/api/map` with a starter fallback.
-- Tools: packing, pricing, phrase, emergency, and visa helper views.
-- Trips: authenticated saved trips with a guest local draft mode.
 - Admin: minimal user management console gated by explicit admin credentials.
 
 ## Tech Stack
@@ -58,6 +54,8 @@ node --test web/tests/*.test.js
 - `AUTH_EXPOSE_EMAIL_CODE=1`: test-only verification code exposure.
 - `DEEPSEEK_API_KEY`: optional; enables remote AI answers for `/api/chat`.
 - `DEEPSEEK_MODEL`: optional; defaults to `deepseek-v4-flash`.
+- `AMAP_KEY`: optional; future server-side Amap integration. Do not expose it to frontend code.
+- `AMAP_SECURITY_CODE`: optional; future server-side Amap security pairing.
 - `OPENAI_COMPATIBLE_API_KEY`: optional key for another OpenAI-compatible chat completions provider.
 - `OPENAI_COMPATIBLE_BASE_URL`: optional base URL for the compatible provider, for example a `/v1` endpoint.
 - `OPENAI_COMPATIBLE_MODEL`: optional model name for the compatible provider.
@@ -73,6 +71,14 @@ node --test web/tests/*.test.js
 - `GET /api/cities`
 - `GET /api/cities/:id`
 - `GET /api/map`
+- `GET /api/maps/geocode?q=北京故宫`
+- `GET /api/maps/place?type=hotel&lat=39.916&lng=116.397`
+- `GET /api/maps/translate?name=故宫`
+- `GET /api/hotels/search?city=北京&checkin=2026-06-28&checkout=2026-06-30`
+- `GET /api/hotels/detail?id=bj-legend-001`
+- `POST /api/hotels/book`
+- `GET /api/deals/search?city=北京&type=food`
+- `GET /api/deals/detail?id=bj-duck-001`
 - `GET /api/translations`
 - `GET /api/tools`
 - `GET /api/tools/:id`

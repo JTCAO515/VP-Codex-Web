@@ -25,13 +25,9 @@ The product should feel like a mobile travel companion, not a generic chatbot, n
 
 | View | Purpose | Current state |
 | --- | --- | --- |
-| Dashboard | Command center for questions, saved trips, and readiness | Active |
-| Ask | AI travel butler conversation | Active |
+| Chatbot | AI consultation, itinerary planning, city questions, and follow-up prompts | Active |
+| Dashboard | Command center for questions, saved trips, hotels, map POI, deals, cities, tools, and readiness | Active |
 | Translate | Native text/phrase translation for on-trip situations | Active foundation |
-| Cities | Searchable city intelligence | Active |
-| Map | Route and geography intelligence | Active foundation |
-| Tools | Practical travel helpers | Active |
-| Trips | Guest and authenticated trip drafts | Active |
 | Account | Email/password, email verification, optional Google OAuth | Active |
 | Admin | Minimal user management | Internal only |
 
@@ -54,13 +50,17 @@ api/index.py
         +-- api/auth.py
         +-- api/chat.py
         +-- api/cities.py
+        +-- api/deals.py
+        +-- api/health.py
+        +-- api/hotels.py
+        +-- api/maps.py
         +-- api/tools.py
         +-- api/translations.py
         +-- api/visa.py
         +-- api/config.py
         |
         v
-data/*.json + data/translations/*.json + SQLite + optional providers
+data/*.json + data/translations/*.json + data/hotels/*.json + data/deals/*.json + SQLite + optional providers
 ```
 
 ## Key Decisions
@@ -68,6 +68,8 @@ data/*.json + data/translations/*.json + SQLite + optional providers
 - Keep the frontend lightweight: static HTML, CSS, vanilla JavaScript.
 - Keep UI English-native.
 - Treat mobile portrait as the primary surface.
+- Keep primary navigation to three core tabs; aggregate service modules inside Dashboard.
+- Keep Amap and supplier keys behind backend routes.
 - Use curated JSON translation data before adding complex retrieval.
 - Keep Phase 2 community documented only.
 - Hide optional provider features until configured.

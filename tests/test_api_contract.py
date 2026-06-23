@@ -65,6 +65,41 @@ class ApiContractTests(unittest.TestCase):
         self.assertGreaterEqual(len(data["dining"]["dishes"]), 4)
         self.assertGreaterEqual(len(data["attractions"]["attractions"]), 4)
 
+    def test_maps_hotels_and_deals_butler_endpoints(self):
+        code, geocode, _ = request("GET", "/api/maps/geocode", query="q=北京故宫")
+        self.assertEqual(code, 200)
+        self.assertEqual(geocode["query"], "北京故宫")
+        self.assertIn("lat", geocode["location"])
+        self.assertIn("lng", geocode["location"])
+
+        code, places, _ = request("GET", "/api/maps/place", query="type=hotel&lat=39.916&lng=116.397")
+        self.assertEqual(code, 200)
+        self.assertEqual(places["type"], "hotel")
+        self.assertGreaterEqual(len(places["places"]), 2)
+
+        code, translated, _ = request("GET", "/api/maps/translate", query="name=故宫")
+        self.assertEqual(code, 200)
+        self.assertEqual(translated["english"], "Forbidden City")
+        self.assertIn("pinyin", translated)
+
+        code, hotels, _ = request("GET", "/api/hotels/search", query="city=北京&checkin=2026-06-28&checkout=2026-06-30")
+        self.assertEqual(code, 200)
+        self.assertGreaterEqual(len(hotels["hotels"]), 2)
+        self.assertTrue(hotels["hotels"][0]["foreignerFriendly"]["acceptsForeignGuests"])
+
+        code, detail, _ = request("GET", "/api/hotels/detail", query=f"id={hotels['hotels'][0]['id']}")
+        self.assertEqual(code, 200)
+        self.assertIn("metroDistance", detail["hotel"])
+
+        code, deals, _ = request("GET", "/api/deals/search", query="city=北京&type=food")
+        self.assertEqual(code, 200)
+        self.assertGreaterEqual(len(deals["deals"]), 2)
+        self.assertIn("foreignerUsability", deals["deals"][0])
+
+        code, deal_detail, _ = request("GET", "/api/deals/detail", query=f"id={deals['deals'][0]['id']}")
+        self.assertEqual(code, 200)
+        self.assertIn("englishGuide", deal_detail["deal"]["foreignerUsability"])
+
 
 if __name__ == "__main__":
     unittest.main()

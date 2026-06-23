@@ -3,9 +3,12 @@ const state = {
   user: null,
   cities: [],
   map: null,
+  hotels: [],
+  deals: [],
   translations: null,
   translationDirection: "auto",
   tools: [],
+  llm: null,
   chat: {
     mode: "itinerary",
     provider: "auto",
@@ -141,10 +144,6 @@ function setView(view) {
   });
   if (view === "dashboard") loadDashboard();
   if (view === "translate") loadTranslations();
-  if (view === "cities") loadCities();
-  if (view === "map") loadMap();
-  if (view === "tools") loadTools();
-  if (view === "trips") loadTrips();
   if (window.matchMedia("(max-width: 560px)").matches) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -192,6 +191,28 @@ async function loadChatOptions() {
     if (!state.chat.hasStarted) setStatus("#chatStatus", "Ready. Start with a question or a quick prompt.");
   } catch (error) {
     setStatus("#chatStatus", "Chat is using local defaults.", "error");
+  }
+}
+
+async function loadLlmHealth() {
+  const node = $("#llmStatus");
+  if (!node) return;
+  try {
+    const data = await api("/api/health", { timeout: 9000 });
+    node.classList.add("llm-status");
+    state.llm = data.llm || null;
+    const status = state.llm?.status || "unconfigured";
+    node.dataset.tone = status === "available" ? "success" : status === "error" ? "error" : "warning";
+    node.textContent = status === "available"
+      ? `DeepSeek connected - ${state.llm.model}`
+      : status === "configured"
+        ? "DeepSeek is configured. Local guide remains ready as backup."
+        : status === "error"
+          ? "DeepSeek is unavailable right now. Local guide is ready as backup."
+          : "DeepSeek is not configured. Local guide is ready.";
+  } catch (error) {
+    node.dataset.tone = "error";
+    node.textContent = "Guide health check failed. Local fallback remains available.";
   }
 }
 
@@ -325,6 +346,123 @@ function loadDashboard() {
   });
   recentQuestions.replaceChildren(...(cards.length ? cards : [
     emptyState("No questions yet", "Your recent Ask messages will appear here so the dashboard can become a travel command center.", "Ask VisePanda", () => setView("chat")),
+  ]));
+  loadDashboardCities();
+  loadDashboardMap();
+  loadDashboardHotels();
+  loadDashboardDeals();
+  loadDashboardTools();
+  loadDashboardTrips();
+}
+
+function miniCard(title, text, tags = []) {
+  const card = document.createElement("article");
+  card.className = "mini-card glare-card";
+  card.appendChild(createText("h3", "", title));
+  card.appendChild(createText("p", "meta", text));
+  if (tags.length) renderTags(card, tags);
+  return card;
+}
+
+async function loadDashboardCities() {
+  const compact = $("#dashboardCities");
+  const featured = $("#featuredCities");
+  try {
+    if (!state.cities.length) {
+      const data = await api("/api/cities");
+      state.cities = data.cities || [];
+    }
+    if (featured && !featured.children.length) {
+      featured.replaceChildren(...state.cities.slice(0, 4).map(cityCard));
+    }
+    if (compact && !compact.children.length) {
+      compact.replaceChildren(...state.cities.slice(0, 6).map((city) => miniCard(city.name, city.vibe, [city.duration, city.bestSeason])));
+    }
+  } catch (error) {
+    compact?.replaceChildren(emptyState("Cities did not load", "Ask in Chatbot or retry after the connection recovers.", "", null));
+  }
+}
+
+async function loadDashboardMap() {
+  const board = $("#dashboardMap");
+  if (!board || board.children.length) return;
+  try {
+    const data = await api("/api/maps/place?type=attraction&lat=39.916&lng=116.397");
+    const pins = (data.places || []).slice(0, 4).map((place) => {
+      const pin = document.createElement("span");
+      pin.className = "map-pin";
+      pin.textContent = `${place.name} - ${place.distance}`;
+      return pin;
+    });
+    board.replaceChildren(...pins);
+  } catch (error) {
+    board.replaceChildren(miniCard("Map proxy ready", "Configure AMAP_KEY later for live geocoding and nearby POI.", ["Server-side key", "No frontend leak"]));
+  }
+}
+
+async function loadDashboardHotels() {
+  const wrap = $("#dashboardHotels");
+  if (!wrap || wrap.children.length) return;
+  try {
+    const data = await api("/api/hotels/search?city=Beijing&checkin=2026-06-28&checkout=2026-06-30");
+    state.hotels = data.hotels || [];
+    wrap.replaceChildren(...state.hotels.slice(0, 3).map((hotel) => miniCard(
+      hotel.name,
+      `${hotel.district} - ${hotel.metroDistance}`,
+      [
+        hotel.foreignerFriendly?.acceptsForeignGuests ? "Foreign guests" : "",
+        hotel.foreignerFriendly?.englishService ? "English service" : "",
+        hotel.foreignerFriendly?.foreignCards ? "Foreign cards" : "",
+      ].filter(Boolean),
+    )));
+  } catch (error) {
+    wrap.replaceChildren(emptyState("Hotels did not load", "The booking interface is available as a backend stub.", "", null));
+  }
+}
+
+async function loadDashboardDeals() {
+  const wrap = $("#dashboardDeals");
+  if (!wrap || wrap.children.length) return;
+  try {
+    const data = await api("/api/deals/search?city=Beijing&type=food");
+    state.deals = data.deals || [];
+    wrap.replaceChildren(...state.deals.slice(0, 3).map((deal) => miniCard(
+      deal.title,
+      `${deal.price} - ${deal.platform}`,
+      [
+        deal.foreignerUsability?.englishGuide ? "English guide" : "",
+        deal.foreignerUsability?.staffCanHelpRedeem ? "Staff can help" : "",
+      ].filter(Boolean),
+    )));
+  } catch (error) {
+    wrap.replaceChildren(emptyState("Deals did not load", "Group-buying interfaces are ready for later supplier data.", "", null));
+  }
+}
+
+async function loadDashboardTools() {
+  const wrap = $("#dashboardTools");
+  if (!wrap || wrap.children.length) return;
+  try {
+    if (!state.tools.length) {
+      const data = await api("/api/tools");
+      state.tools = data.tools || [];
+    }
+    wrap.replaceChildren(...state.tools.slice(0, 4).map((tool) => miniCard(tool.name, tool.description, [tool.id])));
+  } catch (error) {
+    wrap.replaceChildren(emptyState("Tools did not load", "Visa, payment, connectivity, and packing tools will appear here.", "", null));
+  }
+}
+
+function loadDashboardTrips() {
+  const wrap = $("#dashboardTripsList");
+  if (!wrap) return;
+  const trips = getGuestTrips();
+  wrap.replaceChildren(...(trips.length ? trips.slice(0, 3).map((trip) => miniCard(
+    trip.title || "China trip",
+    [trip.destination, trip.startDate, trip.endDate].filter(Boolean).join(" - ") || "Draft itinerary",
+    ["Saved"],
+  )) : [
+    emptyState("No saved trips", "Create a trip draft from the dashboard or continue planning in Chatbot.", "Ask AI", () => setView("chat")),
   ]));
 }
 
@@ -460,7 +598,7 @@ function translateText(value) {
   } else if (direction === "zh-en") {
     result = "Quick meaning unavailable in the local travel dictionary. Ask VisePanda for a fuller translation when online.";
   } else {
-    result = "本地旅行词库暂未收录这句话。联网时可让 VisePanda 做完整翻译。";
+    result = "The local travel dictionary does not include this phrase yet. Ask VisePanda for a complete translation when online.";
   }
   if (output) output.textContent = result;
   saveTranslationHistory(text, result);
@@ -794,7 +932,10 @@ function bindEvents() {
     if (!button || state.chat.isStreaming) return;
     await sendChat(button.dataset.followup);
   });
-  $("#mapAskButton").addEventListener("click", async () => {
+  $("#dashboardHotelsButton")?.addEventListener("click", () => $("#dashboardHotels")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("#dashboardMapButton")?.addEventListener("click", () => $("#dashboardMap")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("#dashboardDealsButton")?.addEventListener("click", () => $("#dashboardDeals")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("#mapAskButton")?.addEventListener("click", async () => {
     setView("chat");
     await sendChat("Help me compare the best China route by map logic, including rail, flight, and transfer difficulty.", { mode: "transit", depth: "expert" });
   });
@@ -819,7 +960,7 @@ function bindEvents() {
     }
     setStatus("#translateStatus", "Voice tools are available in this browser. Full push-to-talk flow is planned for the next build.");
   });
-  $("#citySearch").addEventListener("input", loadCities);
+  $("#citySearch")?.addEventListener("input", loadCities);
   $("#chatForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const input = $("#chatInput");
@@ -839,13 +980,13 @@ function bindEvents() {
     const length = values.length || values.duration || "7 days";
     await withButtonBusy(button, "Asking", () => sendChat(`Plan a ${length} China trip for ${values.destination || "a first-time visitor"}.`));
   });
-  $("#tripForm").addEventListener("submit", async (event) => {
+  $("#tripForm")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const button = form.querySelector("button");
     await withButtonBusy(button, "Saving", () => saveTrip(form));
   });
-  $("#refreshTrips").addEventListener("click", (event) => withButtonBusy(event.currentTarget, "Refreshing", loadTrips));
+  $("#refreshTrips")?.addEventListener("click", (event) => withButtonBusy(event.currentTarget, "Refreshing", loadTrips));
   $("#authButton").addEventListener("click", () => {
     updateAuthUi();
     $("#authDialog").showModal();
@@ -963,7 +1104,7 @@ async function boot() {
   handleAuthReturn();
   bindEvents();
   setView("chat");
-  Promise.all([loadCities(), restoreSession(), loadChatOptions(), loadAuthConfig(), loadTranslations()]).catch(() => {});
+  Promise.all([loadDashboardCities(), restoreSession(), loadChatOptions(), loadLlmHealth(), loadAuthConfig(), loadTranslations()]).catch(() => {});
 }
 
 if (document.readyState === "loading") {

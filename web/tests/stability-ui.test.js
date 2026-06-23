@@ -27,15 +27,15 @@ test("dashboard remains available but Ask is the first screen", () => {
 test("mobile portrait interaction shell has thumb-friendly controls", () => {
   assert.match(css, /\.nav\s*{[^}]*position: fixed/s);
   assert.match(css, /bottom: calc\(8px \+ env\(safe-area-inset-bottom\)\)/);
-  assert.match(css, /grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
+  assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.city-strip\s*{[^}]*scroll-snap-type: x mandatory/s);
   assert.match(html, /data-prompt="Plan a first-time 7 day China route/);
 });
 
 test("v6.2.1 exposes mobile status surfaces", () => {
-  assert.match(html, /id="cityStatus"/);
-  assert.match(html, /id="toolStatus"/);
-  assert.match(html, /id="tripStatus"/);
+  assert.match(html, /id="llmStatus"/);
+  assert.match(html, /id="dashboardHotels"/);
+  assert.match(html, /id="dashboardTripsList"/);
   assert.match(html, /id="toast"/);
   assert.match(css, /\.empty-state/);
   assert.match(css, /\.skeleton-card/);
@@ -80,14 +80,12 @@ test("v6.2.1 exposes email verification and Google auth controls", () => {
 
 test("v6.2.1 makes mobile navigation behave like real app tabs", () => {
   assert.match(html, /role="tablist"/);
-  assert.match(html, /id="tab-chat"[^>]*aria-selected="true"/);
+  assert.match(html, /id="tab-chatbot"[^>]*aria-selected="true"/);
   assert.match(html, /id="tab-dashboard"/);
   assert.match(html, /id="tab-translate"/);
-  assert.match(html, /id="tab-map"/);
-  assert.match(html, /role="tabpanel" aria-labelledby="tab-chat"/);
+  assert.match(html, /role="tabpanel" aria-labelledby="tab-chatbot"/);
   assert.match(css, /\.nav__item\.is-active::after/);
   assert.match(css, /\.nav__item\[data-view="translate"\]/);
-  assert.match(css, /\.nav__item\[data-view="map"\]/);
   assert.match(appJs(), /setAttribute\("aria-selected"/);
   assert.match(appJs(), /toggleAttribute\("hidden"/);
 });
