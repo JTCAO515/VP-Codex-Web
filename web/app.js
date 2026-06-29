@@ -16,6 +16,10 @@ const state = {
     hasStarted: false,
     isStreaming: false,
   },
+  itinerary: {
+    title: "Beijing first-timer loop",
+    items: [],
+  },
   authMode: "login",
   pendingEmail: "",
   authConfig: {
@@ -362,6 +366,179 @@ function miniCard(title, text, tags = []) {
   card.appendChild(createText("p", "meta", text));
   if (tags.length) renderTags(card, tags);
   return card;
+}
+
+function itineraryForMessage(message = "", answer = "") {
+  const haystack = `${message} ${answer}`.toLowerCase();
+  if (/shanghai|bund|suzhou|hangzhou|art|798/.test(haystack)) {
+    return {
+      title: "Shanghai culture and skyline loop",
+      items: [
+        {
+          icon: "city",
+          title: "The Bund golden-hour walk",
+          text: "Start with the riverfront, then cross toward Lujiazui for skyline photos and an easy first-night orientation.",
+          tip: "Book a river-view dinner only after checking haze and sunset time.",
+          images: [
+            { src: "/static/img/city-shanghai.jpg", label: "The Bund" },
+            { src: "/static/img/food-shanghai.jpg", label: "Local dinner" },
+          ],
+        },
+        {
+          icon: "art",
+          title: "Museum and lane-house afternoon",
+          text: "Use People Square as the anchor, then add a low-pressure lane-house cafe route before dinner.",
+          images: [
+            { src: "/static/img/inspiration-hidden-gems.jpg", label: "Lane houses" },
+            { src: "/static/img/city-suzhou.jpg", label: "Optional Suzhou" },
+          ],
+        },
+      ],
+    };
+  }
+  if (/chengdu|panda|hotpot|sichuan/.test(haystack)) {
+    return {
+      title: "Chengdu food and panda loop",
+      items: [
+        {
+          icon: "food",
+          title: "Pandas first, hotpot later",
+          text: "Visit the panda base early, rest after lunch, then keep the evening for hotpot with clear spice instructions.",
+          tip: "Ask for yuan yang pot if someone in the group is spice-sensitive.",
+          images: [
+            { src: "/static/img/city-chengdu.jpg", label: "Chengdu" },
+            { src: "/static/img/food-chengdu.jpg", label: "Hotpot" },
+          ],
+        },
+        {
+          icon: "tea",
+          title: "Teahouse and old street buffer",
+          text: "Leave a flexible half day for People's Park, Kuanzhai Alley, and a slower teahouse stop.",
+          images: [
+            { src: "/static/img/inspiration-foodie.jpg", label: "Snack walk" },
+            { src: "/static/img/city-chongqing.jpg", label: "Optional Chongqing" },
+          ],
+        },
+      ],
+    };
+  }
+  if (/xian|xi'an|terracotta|warrior/.test(haystack)) {
+    return {
+      title: "Xi'an history and night market loop",
+      items: [
+        {
+          icon: "museum",
+          title: "Terracotta Warriors day trip",
+          text: "Go early with a guide or audio guide, then return for the city wall before sunset.",
+          tip: "Keep passport details handy for museum and rail bookings.",
+          images: [
+            { src: "/static/img/city-xian.jpg", label: "Xi'an" },
+            { src: "/static/img/great-wall.jpg", label: "Ancient walls" },
+          ],
+        },
+        {
+          icon: "food",
+          title: "Muslim Quarter snack route",
+          text: "Use the evening for noodles, roujiamo, and a short walk back by metro or taxi.",
+          images: [
+            { src: "/static/img/inspiration-foodie.jpg", label: "Snack route" },
+            { src: "/static/img/city-luoyang.jpg", label: "Optional Luoyang" },
+          ],
+        },
+      ],
+    };
+  }
+  return {
+    title: "Beijing first-timer loop",
+    items: [
+      {
+        icon: "temple",
+        title: "Forbidden City and Jingshan pairing",
+        text: "Start with the Forbidden City, then climb Jingshan Park for the classic roofline view and an easy north-side exit.",
+        tip: "Reserve the palace slot early and keep your passport with you.",
+        images: [
+          { src: "/static/img/city-beijing.jpg", label: "Forbidden City" },
+          { src: "/static/img/great-wall.jpg", label: "Jingshan view" },
+        ],
+      },
+      {
+        icon: "mountain",
+        title: "Mutianyu Great Wall day",
+        text: "Mutianyu offers a well-preserved section with mountain views, fewer stairs than wilder sections, and a practical return plan.",
+        tip: "The morning mist over the watchtowers is worth the early start.",
+        images: [
+          { src: "/static/img/great-wall.jpg", label: "Great Wall" },
+          { src: "/static/img/inspiration-first-time.jpg", label: "First trip" },
+        ],
+      },
+      {
+        icon: "art",
+        title: "798 Art District or hutong buffer",
+        text: "Add a lighter culture block after the main landmarks so the route does not become all museums and transfers.",
+        images: [
+          { src: "/static/img/inspiration-hidden-gems.jpg", label: "798 Art District" },
+          { src: "/static/img/city-beijing.jpg", label: "Hutong walk" },
+        ],
+      },
+    ],
+  };
+}
+
+function itineraryIcon(type) {
+  if (type === "mountain") return '<path d="m3 17 5-7 4 5 3-4 6 6Z"></path>';
+  if (type === "food") return '<path d="M7 2v8"></path><path d="M11 2v8"></path><path d="M7 6h4"></path><path d="M9 10v12"></path><path d="M17 2v20"></path><path d="M14 2c0 5 6 5 6 0"></path>';
+  if (type === "art") return '<circle cx="12" cy="12" r="9"></circle><circle cx="8" cy="10" r="1"></circle><circle cx="12" cy="7" r="1"></circle><circle cx="16" cy="10" r="1"></circle><path d="M8 16c2.5-2 5.5-2 8 0"></path>';
+  if (type === "tea") return '<path d="M5 9h11v4a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5Z"></path><path d="M16 10h2a2 2 0 0 1 0 4h-2"></path><path d="M8 4c0 1 .8 1 .8 2"></path><path d="M12 4c0 1 .8 1 .8 2"></path>';
+  if (type === "museum") return '<path d="M3 10h18"></path><path d="m5 10 7-5 7 5"></path><path d="M6 10v8"></path><path d="M10 10v8"></path><path d="M14 10v8"></path><path d="M18 10v8"></path><path d="M4 18h16"></path>';
+  return '<path d="M3 10h18"></path><path d="m5 10 7-5 7 5"></path><path d="M6 10v8"></path><path d="M10 10v8"></path><path d="M14 10v8"></path><path d="M18 10v8"></path>';
+}
+
+function renderLiveItinerary(message = "", status = "ready", answer = "") {
+  const timeline = $("#itineraryTimeline");
+  const title = $("#itineraryTitle");
+  if (!timeline || !title) return;
+  const trip = itineraryForMessage(message, answer);
+  state.itinerary = trip;
+  title.textContent = trip.title;
+  const cards = trip.items.map((item, index) => {
+    const article = document.createElement("article");
+    article.className = "itinerary-step";
+    const icon = document.createElement("div");
+    icon.className = "itinerary-step__icon";
+    icon.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${itineraryIcon(item.icon)}</svg>`;
+    const body = document.createElement("div");
+    body.className = "itinerary-step__body";
+    body.appendChild(createText("span", "itinerary-time", index === 0 ? "10:32 AM" : `Day ${index + 1}`));
+    body.appendChild(createText("h3", "", item.title));
+    body.appendChild(createText("p", "", status === "planning" && index === 0 ? "VisePanda is shaping this route from your latest question..." : item.text));
+    if (item.images?.length) {
+      const strip = document.createElement("div");
+      strip.className = "itinerary-images";
+      item.images.forEach((image) => {
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        img.src = image.src;
+        img.alt = image.label;
+        img.loading = "lazy";
+        img.addEventListener("error", () => {
+          img.src = "/static/img/great-wall.jpg";
+        }, { once: true });
+        figure.appendChild(img);
+        figure.appendChild(createText("figcaption", "", image.label));
+        strip.appendChild(figure);
+      });
+      body.appendChild(strip);
+    }
+    if (item.tip) body.appendChild(createText("blockquote", "", `"${item.tip}" - VisePanda tip`));
+    article.append(icon, body);
+    return article;
+  });
+  timeline.replaceChildren(...cards);
+}
+
+function itineraryText() {
+  const trip = state.itinerary.items?.length ? state.itinerary : itineraryForMessage();
+  return [trip.title, ...trip.items.map((item, index) => `${index + 1}. ${item.title}: ${item.text}`)].join("\n");
 }
 
 async function loadDashboardCities() {
@@ -744,6 +921,7 @@ async function sendChat(message, overrides = {}) {
   state.chat = { ...state.chat, ...settings };
   startChatExperience();
   renderFollowups();
+  renderLiveItinerary(message, "planning");
   setStatus("#chatStatus", "Thinking through the route...");
   saveRecentQuestion(message);
   addMessage("You", message, "user");
@@ -798,6 +976,7 @@ async function sendChat(message, overrides = {}) {
     if (input) input.disabled = false;
     setStatus("#chatStatus", "");
     if (completed && target.textContent.trim()) renderFollowups(buildFollowups(message, target.textContent));
+    renderLiveItinerary(message, completed ? "ready" : "fallback", target.textContent);
     if (window.matchMedia("(max-width: 560px)").matches) {
       document.body.classList.remove("is-chat-composing");
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
@@ -935,6 +1114,24 @@ function bindEvents() {
   $("#dashboardHotelsButton")?.addEventListener("click", () => $("#dashboardHotels")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   $("#dashboardMapButton")?.addEventListener("click", () => $("#dashboardMap")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   $("#dashboardDealsButton")?.addEventListener("click", () => $("#dashboardDeals")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("#shareItinerary")?.addEventListener("click", async () => {
+    const text = itineraryText();
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Itinerary copied");
+    } catch {
+      showToast(text, "info");
+    }
+  });
+  $("#downloadItinerary")?.addEventListener("click", () => {
+    const blob = new Blob([itineraryText()], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "visepanda-itinerary.txt";
+    link.click();
+    URL.revokeObjectURL(url);
+  });
   $("#mapAskButton")?.addEventListener("click", async () => {
     setView("chat");
     await sendChat("Help me compare the best China route by map logic, including rail, flight, and transfer difficulty.", { mode: "transit", depth: "expert" });
@@ -1103,6 +1300,7 @@ function bindEvents() {
 async function boot() {
   handleAuthReturn();
   bindEvents();
+  renderLiveItinerary();
   setView("chat");
   Promise.all([loadDashboardCities(), restoreSession(), loadChatOptions(), loadLlmHealth(), loadAuthConfig(), loadTranslations()]).catch(() => {});
 }

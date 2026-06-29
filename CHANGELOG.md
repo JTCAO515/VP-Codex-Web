@@ -1,5 +1,19 @@
 # Changelog
 
+## v6.2.2 - 2026-06-29
+
+### Changed
+
+- Imported the Claude Web visual direction into the current Codex build: warm cream/cinnabar palette, mountain-paper backdrop, app shell, and stronger icon tab styling.
+- Reworked Chat into a two-pane travel workspace: live itinerary planning on the left and the conversation/control panel on the right for desktop.
+- Kept mobile portrait ergonomic by stacking Chat first and the live itinerary below it, with the three-tab dock still in thumb reach.
+- Added share/copy and download controls for the live itinerary preview.
+- Added lightweight front-end itinerary generation that updates from the traveler question and the AI answer context.
+
+### Regression
+
+- Added frontend coverage for the Claude warm shell, mountain backdrop asset, live itinerary panel, and left-itinerary/right-chat desktop layout.
+
 ## v6.2.1 - 2026-06-23
 
 ### Changed

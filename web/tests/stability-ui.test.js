@@ -49,7 +49,7 @@ test("v6.2.1 uses shared visual system tokens", () => {
   assert.match(css, /--shadow-raised:/);
   assert.match(css, /\.city-card__facts/);
   assert.match(css, /\.trip-card__facts/);
-  assert.match(html, /20260623-v621-travel-butler-translate/);
+  assert.match(html, /20260629-claude-tabs/);
   assert.match(css, /prefers-color-scheme: dark/);
 });
 
@@ -136,6 +136,17 @@ test("v6.2.1 moves app tabs into a colorful icon-only rail", () => {
   assert.match(css, /\.nav__item span,[\s\S]*?\.topbar-link span\s*{[\s\S]*?clip: rect\(0, 0, 0, 0\)/s);
   assert.match(html, /id="tab-dashboard"[^>]*aria-label="Dashboard"/);
   assert.match(css, /\.nav__item\[data-view="dashboard"\]/);
+});
+
+test("v6.2.2 imports Claude warm shell and tab visual direction", () => {
+  assert.match(html, /class="shell"/);
+  assert.match(html, /class="app"/);
+  assert.match(html, /family=Caveat/);
+  assert.match(css, /url\("\/web\/assets\/bg-mountains\.svg"\)/);
+  assert.match(css, /--brand:\s*#a23728/);
+  assert.match(css, /--accent:\s*#b8862c/);
+  assert.match(css, /\.app\s*{[\s\S]*?border-radius: 18px/s);
+  assert.ok(fs.existsSync(path.join(root, "assets", "bg-mountains.svg")));
 });
 
 test("v6.2.1 adds native travel-butler translation surface", () => {

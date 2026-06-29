@@ -5,41 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VisePanda | China Travel Butler</title>
     <meta name="description" content="Your all-in-one China travel butler for planning, translation, rides, meals, routes, and local travel help.">
-    <meta name="theme-color" content="#0f2633">
+    <meta name="theme-color" content="#f5e9d8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <link rel="manifest" href="/web/manifest.json">
-    <link rel="stylesheet" href="/web/app.css?v=20260623-v621-travel-butler-translate">
+    <link rel="stylesheet" href="/web/app.css?v=20260629-claude-tabs">
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="VisePanda home">
-        <img src="/static/img/logo-panda.jpg" alt="">
-        <span>VisePanda</span>
-      </a>
-      <div class="topbar__actions">
-        <button class="icon-button" id="authButton" title="Account" aria-label="Account">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.7-4 4.4-6 8-6s6.3 2 8 6"></path></svg>
-        </button>
-      </div>
-    </header>
-    <nav class="nav" aria-label="Primary" role="tablist">
-      <button class="nav__item is-active" id="tab-chatbot" data-view="chat" role="tab" aria-selected="true" aria-controls="panel-chat" title="Chatbot" aria-label="Chatbot">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
-        <span>Chatbot</span>
-      </button>
-      <button class="nav__item" id="tab-dashboard" data-view="dashboard" role="tab" aria-selected="false" aria-controls="panel-dashboard" title="Dashboard" aria-label="Dashboard">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h7V4H4Z"></path><path d="M13 20h7V4h-7Z"></path><path d="M4 20h7v-5H4Z"></path></svg>
-        <span>Dashboard</span>
-      </button>
-      <button class="nav__item" id="tab-translate" data-view="translate" role="tab" aria-selected="false" aria-controls="panel-translate">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h8"></path><path d="M9 3v2"></path><path d="M4 11c3.4 0 6-2.2 6-6"></path><path d="M12 11c-1.4-.6-2.6-1.6-3.5-3"></path><path d="M13 21l4-10 4 10"></path><path d="M15 17h4"></path></svg>
-        <span>Translation</span>
-      </button>
-    </nav>
+    <div class="shell">
+      <div class="app">
+        <header class="topbar">
+          <a class="brand" href="/" aria-label="VisePanda home">
+            <img src="/static/img/logo-panda.jpg" alt="">
+            <span>VisePanda</span>
+          </a>
+          <div class="topbar__actions">
+            <button class="icon-button" id="authButton" title="Account" aria-label="Account">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.7-4 4.4-6 8-6s6.3 2 8 6"></path></svg>
+            </button>
+          </div>
+        </header>
+        <nav class="nav" aria-label="Primary" role="tablist">
+          <button class="nav__item is-active" id="tab-chatbot" data-view="chat" role="tab" aria-selected="true" aria-controls="panel-chat" title="Chatbot" aria-label="Chatbot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
+            <span>Chatbot</span>
+          </button>
+          <button class="nav__item" id="tab-dashboard" data-view="dashboard" role="tab" aria-selected="false" aria-controls="panel-dashboard" title="Dashboard" aria-label="Dashboard">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h7V4H4Z"></path><path d="M13 20h7V4h-7Z"></path><path d="M4 20h7v-5H4Z"></path></svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav__item" id="tab-translate" data-view="translate" role="tab" aria-selected="false" aria-controls="panel-translate">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h8"></path><path d="M9 3v2"></path><path d="M4 11c3.4 0 6-2.2 6-6"></path><path d="M12 11c-1.4-.6-2.6-1.6-3.5-3"></path><path d="M13 21l4-10 4 10"></path><path d="M15 17h4"></path></svg>
+            <span>Translation</span>
+          </button>
+        </nav>
 
-    <main>
+        <main>
       <section class="dashboard section dashboard-drive is-hidden" id="panel-dashboard" data-view-panel="dashboard" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
         <div class="dashboard-main">
           <div class="section__head">
@@ -153,6 +155,7 @@
       </section>
 
       <section class="workspace section chat-hero" id="panel-chat" data-view-panel="chat" role="tabpanel" aria-labelledby="tab-chatbot">
+        <div class="chat-layout">
         <div class="chat-shell">
           <div class="chat-welcome" id="chatWelcome">
             <div class="agent-mark">
@@ -183,6 +186,24 @@
               <span class="send-label">Send</span>
             </button>
           </form>
+        </div>
+        <aside class="itinerary-live" id="itineraryLive" aria-label="Live itinerary preview">
+          <div class="itinerary-live__head">
+            <div>
+              <p class="eyebrow">Recommended trip</p>
+              <h2 id="itineraryTitle">Beijing first-timer loop</h2>
+            </div>
+            <div class="itinerary-actions">
+              <button class="icon-button" id="shareItinerary" type="button" title="Copy itinerary" aria-label="Copy itinerary">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.7 6.8-4.4"></path><path d="m8.6 13.3 6.8 4.4"></path></svg>
+              </button>
+              <button class="icon-button" id="downloadItinerary" type="button" title="Download itinerary" aria-label="Download itinerary">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="itinerary-timeline" id="itineraryTimeline"></div>
+        </aside>
         </div>
       </section>
 
@@ -228,7 +249,9 @@
         </div>
       </section>
 
-    </main>
+        </main>
+      </div>
+    </div>
 
     <button class="mobile-ask-fab" id="mobileAskButton" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
@@ -281,6 +304,6 @@
       <article class="message"><span class="message__author"></span><p class="message__body"></p></article>
     </template>
 
-    <script src="/web/app.js?v=20260623-v621-travel-butler-translate" defer></script>
+    <script src="/web/app.js?v=20260629-claude-tabs" defer></script>
   </body>
 </html>
